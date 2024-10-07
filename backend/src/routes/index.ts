@@ -6,7 +6,7 @@ import admin from './admin'
 const router = Router();
 
 // Route definitions
-
+// api/
 router.use('/', qrRoutes);
-router.use('/admin/login', admin);
+router.use('/admin', admin);
 export default router;

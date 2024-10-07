@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { login } from '../controllers/loginController';
+import { login , addQuestions} from '../controllers/adminController';
 
 const router = Router();
 
-
-router.post('/', login);
-
+// admin/
+router.post('/login', login);
+router.post('/addQuestions', addQuestions)
 
 export default router;
