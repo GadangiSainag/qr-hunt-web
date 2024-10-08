@@ -1,7 +1,7 @@
 import { Request, response, Response } from "express";
 // import { Team } from '../models/Team';
 import { db } from "../config/db";
-import createSHA256Hash from "../utils/createHash";
+import createSHA256Hash from "../utils/createHash"; 
 import { Question } from "../interfaces/types";
 
 export const addQuestions = async (req: Request, res: Response) => {
