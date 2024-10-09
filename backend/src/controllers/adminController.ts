@@ -44,7 +44,7 @@ export const login = async (req: Request, res: Response) => {
     if (!doc.exists) {
       //  if admin doesnot exists
       console.log("No such document!");
-      res.status(404);
+      res.json({no : "entry buddy"}).status(404);
     } else {
       // if  admin exists
       const allData = doc.data();
@@ -54,15 +54,14 @@ export const login = async (req: Request, res: Response) => {
       // wrong password
       if (allData?.password != password) {
         console.log("wrong password");
-        res.status(401);
-        res.json({ mssg: "wrong" });
+        
+        res.json({ mssg: "wrong" }).status(401);
       } else {
         // correct password
-        res.status(200);
-        res.json({ mssg: "correct, get in this page!!" });
+        res.status(200).json({ mssg: "correct, get in this page!!" });
       }
     }
   } catch (error) {
-    res.status(500).json({ message: "Error registering team", error });
+    res.status(500).json({ message: "Error registering admin", error });
   }
 };
