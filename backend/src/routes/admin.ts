@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import { login , addQuestions} from '../controllers/adminController';
+import { login , addQuestions, registerTeam} from '../controllers/adminControllers';
 
 const router = Router();
 
-// admin/
+// /api/admin/
 router.post('/login', login);
-router.post('/addQuestions', addQuestions)
+router.post('/questions/add', addQuestions)
+router.post('/team', registerTeam)
 
 export default router;

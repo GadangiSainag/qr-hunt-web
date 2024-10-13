@@ -11,10 +11,13 @@
     "host": "vite --host "
   },
   "dependencies": {
+    "@yudiel/react-qr-scanner": "^2.0.8",
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
+    "qr-scanner": "^1.4.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-qrcode-logo": "^3.0.0",
     "react-router-dom": "^6.26.2"
   },
   "devDependencies": {

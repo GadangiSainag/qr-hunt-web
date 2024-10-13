@@ -4,6 +4,7 @@ import { db } from "../config/db";
 
 export const validateScan = async (req: Request, res: Response) => {
   try {
+    // for validating questions only at present.
     const { hash, id } = req.body;
 
     const questionRef = db.collection("questions").doc(`${id}`);
@@ -17,7 +18,7 @@ export const validateScan = async (req: Request, res: Response) => {
         // correct qr scanned
         res.json({ key: "correct" }).status(200);
       } else {
-        res.json({ key: "wrong" });
+        res.send({ key: "wrong" });
       }
      ;
     }
