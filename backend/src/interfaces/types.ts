@@ -1,16 +1,17 @@
-export interface Question {
-  id: string;
-  questionText: String;
-  hint: String;
+export interface IQuestion {
+  custonId: string;
+  difficulty: string;
+  questionText: string;
+  hint: string;
 }
 
-export interface TeamAuthInput {
-  huntId : String;
-  teamId: string;
+export interface ITeamDetails {
+  huntId: String;
   teamName: string;
-  questionSet: String[];
-  
+  players: string;
+  questions: string;
 }
-export interface TeamData extends TeamAuthInput{
-  hash : String;
+export interface TeamData  {
+  hash: string;
+  teamId : string;
 }
