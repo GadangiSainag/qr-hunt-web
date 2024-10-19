@@ -1,10 +1,14 @@
 import axios from "axios";
 import React, { useState } from "react";
-import style from './login.module.css'
+import style from "./login.module.css";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
+  const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
+  const { login } = useAuth();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -18,10 +22,13 @@ const Login = () => {
       },
     };
     axios.defaults.withCredentials = true;
+
     axios
       .post("/api/admin/login", data, config)
       .then((response) => {
-        console.log(response.data);
+        console.log(response.data.accessToken);
+        login(response.data.accessToken);
+        navigate("/admin/dashboard");
       })
       .catch((error) => {
         console.error(error);
@@ -33,7 +40,7 @@ const Login = () => {
       <h1 className={style.test}>Login</h1>
       This is testing font - ignore me
       <form onSubmit={handleSubmit}>
-        <label >Email:</label>
+        <label>Email:</label>
         <input
           type="text"
           value={userName}

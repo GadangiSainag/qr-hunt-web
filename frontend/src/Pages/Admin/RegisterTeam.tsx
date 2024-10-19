@@ -1,30 +1,32 @@
 import axios from "axios";
-import React, {  useState } from "react";
-import styles from './register.module.css';
+import React, { useState } from "react";
+import styles from "./register.module.css";
 import Qr from "../../Components/Qr";
 // import style from './login.module.css'
 const RegisterTeam = () => {
   const [teamName, setTeamName] = useState("");
-  const [teamId, setTeamId] = useState("");
+  const [players, setPlayers] = useState("");
   const [huntId, setHuntId] = useState("");
   const [questions, setQuestions] = useState("");
   const [qrData, setQrData] = useState(""); // State for QR code data
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const questionsArray = questions.toLowerCase().split(" ").filter((item) => item !== "");
     const data = {
-      teamId: teamId,
-      teamName: teamName,
-      huntId: huntId,
-      questionSet: questionsArray,
+      players,
+      teamName,
+      huntId,
+      questions,
     };
 
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     };
+
     axios.defaults.withCredentials = true;
+
     axios
       .post("/api/admin/team", data, config)
       .then((response) => {
@@ -42,7 +44,6 @@ const RegisterTeam = () => {
       .catch((error) => {
         console.error(error);
       });
-
   };
   // useEffect hook to update QR code data on successful response (optional)
 
@@ -53,27 +54,31 @@ const RegisterTeam = () => {
       <form onSubmit={handleSubmit}>
         <label>Team Name</label>
         <input
+          required={true}
           type="text"
           value={teamName}
           onChange={(e) => setTeamName(e.target.value)}
         />
         <br />
-        <label>Team Id</label>
+        <label>PLayers</label>
         <input
+          required={true}
           type="text"
-          value={teamId}
-          onChange={(e) => setTeamId(e.target.value)}
+          value={players}
+          onChange={(e) => setPlayers(e.target.value)}
         />
         <br />
-        <label>hunt id</label>
+        <label>Hunt Id</label>
         <input
+          required={true}
           type="text"
           value={huntId}
           onChange={(e) => setHuntId(e.target.value)}
         />
         <br />
-        <label>questions {"(seperated with spaces)"} </label>
+        <label>Questions{"(seperated with spaces)"} </label>
         <input
+          required={true}
           type="text"
           value={questions}
           onChange={(e) => setQuestions(e.target.value)}
@@ -81,10 +86,9 @@ const RegisterTeam = () => {
         <br />
         <button type="submit">Register Team</button>
       </form>
-    <div className={styles.qrContainer}>
-    {qrData && <Qr qrData={qrData} qrSize={200} />}
-    </div>
-
+      <div className={styles.qrContainer}>
+        {qrData && <Qr qrData={qrData} qrSize={200} />}
+      </div>
     </div>
   );
 };

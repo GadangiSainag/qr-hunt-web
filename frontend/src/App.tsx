@@ -8,34 +8,70 @@ import RegisterTeam from "./Pages/Admin/RegisterTeam";
 import TeamLogin from "./Pages/Team/Login";
 import GetReady from "./Pages/Game/GetReady";
 import Dashboard from "./Pages/Admin/Dashboard";
+import axios from "axios";
+// import requestInterceptor from './interceptors/request.interceptor';
+import {
+  responseInterceptor,
+  errorInterceptor,
+} from "./interceptors/response.interceptor";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./Components/ProtectedRoute";
+import ListAllQuestions from "./Components/ListAllQuestions";
 
 function App() {
+  // axios.interceptors.request.use(requestInterceptor);
+  // Adding interceptors to axios
+
+  axios.interceptors.response.use(responseInterceptor, errorInterceptor);
+
   return (
-    <>
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/404" element={<LostPage />} />
+        <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="/home" element={<Home />} />
 
-          <Route path="/home" element={<Home />} />
-          <Route path="/instructions" element={<Home />} /> 
+        <Route path="/instructions" element={<Home />} />
 
-          <Route path="/admin/login" element={<Login />} />
-          <Route path="/admin/dashboard" element={<Dashboard />} />
-          <Route path="/admin/register-team" element={<RegisterTeam />} />
+        <Route path="/admin/login" element={<Login />} />
 
-          <Route path="/team/login" element={<TeamLogin />} />
-          
-          <Route path="/game/ready" element={<GetReady />} /> 
+        <Route path="/test/scanner" element={<QrScanner />} />
 
-          <Route path="/test/scanner" element={<QrScanner />} />
+        <Route path="/team/login" element={<TeamLogin />} />
 
-          {/* <Route path="/en/:id" element={} /> */}
-          
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/*" element={<Navigate to="/404" />} />
+        <Route path="/404" element={<LostPage />} />
+
+        <Route path="/admin/questions" element={<ListAllQuestions />} />
+
+        <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['user', 'admin']}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+        {/* <Route path="/admin/dashboard" element={<Dashboard />} /> */}
+        <Route path="/admin/register-team" element={<RegisterTeam />} />
+        {/* <Route
+            path="/admin/register-team"
+            element={
+              <ProtectedRoute allowedRoles={[ 'admin']}>
+               <RegisterTeam />
+              </ProtectedRoute>
+            }
+          /> */}
+     
+
+        <Route path="/game/ready" element={<GetReady />} />
+
+        <Route path="/*" element={<Navigate to="/404" />} />
+
+        {/* <Route path="/en/:id" element={} /> */}
         </Routes>
       </BrowserRouter>
-    </>
+    </AuthProvider>
   );
 }
 

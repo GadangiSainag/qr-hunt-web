@@ -162,7 +162,7 @@ export const registerTeam = async (
         }));
 
         const teamProgressData = {
-          numberOfQuestions: 5,
+          numberOfQuestions: questionSet.length,
           numberOfSolvedQuestions: 0,
           questionSet: questionSetData,
         };
