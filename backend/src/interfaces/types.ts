@@ -11,7 +11,7 @@ export interface ITeamDetails {
   players: string;
   questions: string;
 }
-export interface TeamData  {
+export interface TeamData {
   hash: string;
-  teamId : string;
+  teamId: string;
 }

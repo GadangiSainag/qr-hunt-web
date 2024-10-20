@@ -9,6 +9,7 @@ interface IJWTPayload extends JwtPayload {
 const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState<AuthContextType["role"]>(null);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -28,35 +29,34 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
 
           console.log("User is authenticated, role:", decodedToken.role);
         } else {
+        //   Let axios interceptor handle Expired token
           console.log("Token is expired.");
-          // Optionally clear the token if expired
-          localStorage.removeItem("accessToken");
         }
       } catch (error) {
         console.error("Invalid token:", error);
-        // Optionally handle invalid token, e.g., remove it
-        localStorage.removeItem("accessToken");
       }
     } else {
       console.log("No token found.");
     }
-  }, []); // Empty dependency array ensures this runs only on mount
-
+    setLoading(false)
+  }, []); 
   const login = (token: string) => {
     localStorage.setItem("accessToken", token);
-    const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decode JWT payload
+    const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decode JWT payload only
     setIsAuthenticated(true);
     setRole(decodedToken.role);
+    setLoading(false)
   };
 
   const logout = () => {
     localStorage.removeItem("accessToken");
     setIsAuthenticated(false);
     setRole(null);
+    
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, role, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, role, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

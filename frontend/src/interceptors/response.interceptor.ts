@@ -42,6 +42,7 @@ export const errorInterceptor = async (error: AxiosError) => {
     } catch (err) {
       console.error("Refresh token failed:", err);
       // Handle refresh token failure (e.g., logout user)
+      
     }
   }
 

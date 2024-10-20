@@ -9,6 +9,7 @@ import jwt, { PrivateKey } from "jsonwebtoken";
 import { Encoding } from "crypto";
 import { generateAccessToken, generateRefreshToken } from "./tokenControllers";
 import { stringToStringArray } from "../utils/converter";
+import { IAuthRequest } from "../middlewares/authMiddleware";
 
 export interface IUser {
   id: string;
@@ -116,8 +117,6 @@ export const registerTeam = async (
 ) => {
   try {
     const { players, teamName, questions, huntId }: ITeamDetails = req.body;
-    const { user } = req.body;
-    console.log(user);
     if (!(teamName && questions && huntId && players)) {
       res
         .status(403)

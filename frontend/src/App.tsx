@@ -15,9 +15,10 @@ import {
   errorInterceptor,
 } from "./interceptors/response.interceptor";
 import ProtectedRoute from "./Components/ProtectedRoute";
-import ListAllQuestions from "./Components/ListAllQuestions";
+// import ListAllQuestions from "./Components/ListAllQuestions";
 import Info from "./Pages/Game/Info";
 import AuthContextProvider from "./context/AuthContextprovider";
+import ListAllQuestions from "./Components/ListAllQuestions";
 
 function App() {
   // axios.interceptors.request.use(requestInterceptor);
@@ -26,54 +27,38 @@ function App() {
   axios.interceptors.response.use(responseInterceptor, errorInterceptor);
 
   return (
-    <AuthContextProvider >
+    <AuthContextProvider>
       <BrowserRouter>
         <Routes>
-        <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="/home" element={<Home />} />
 
-        <Route path="/information" element={<Info />} />
+          <Route path="/information" element={<Info />} />
 
-        <Route path="/instructions" element={<Home />} />
+          <Route path="/instructions" element={<Home />} />
 
-        <Route path="/admin/login" element={<Login />} />
+          <Route path="/admin/login" element={<Login />} />
 
-        <Route path="/test/scanner" element={<QrScanner />} />
+          <Route path="/test/scanner" element={<QrScanner />} />
 
-        <Route path="/team/login" element={<TeamLogin />} />
+          <Route path="/team/login" element={<TeamLogin />} />
 
-        <Route path="/404" element={<LostPage />} />
+          <Route path="/404" element={<LostPage />} />
 
-        {/* <Route path="/admin/questions" element={<ListAllQuestions />} /> */}
-        <Route
-            path="/admin/questions"
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <ListAllQuestions />
-              </ProtectedRoute>
-            }
-          />
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          {/* Protected routes for only admin */}
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/questions" element={<ListAllQuestions />} />
+            <Route path="/admin/register-team" element={<RegisterTeam />} />
+          </Route>
+          {/* <Route element={<ProtectedRoute allowedRoles={["admin"]} />}></Route> */}
+          {/* <Route path="/admin/dashboard" element={<Dashboard />} /> */}
 
-        <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={[ 'admin']}>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/game/ready" element={<GetReady />} />
 
-        {/* <Route path="/admin/dashboard" element={<Dashboard />} /> */}
+          <Route path="/*" element={<Navigate to="/404" />} />
 
-        <Route path="/admin/register-team" element={<RegisterTeam />} />
-        
-     
-
-        <Route path="/game/ready" element={<GetReady />} />
-
-        <Route path="/*" element={<Navigate to="/404" />} />
-
-        {/* <Route path="/en/:id" element={} /> */}
+          {/* <Route path="/en/:id" element={} /> */}
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>

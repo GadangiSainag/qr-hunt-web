@@ -9,14 +9,14 @@ const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login } = useAuth();
+  const { login , isAuthenticated} = useAuth();
   
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const data = {
-      userName: userName,
-      password: password,
+      userName: userName.trim(),
+      password: password.trim(),
       role: "admin",
     };
     const config = {
@@ -29,7 +29,6 @@ const Login = () => {
     axios
       .post("/api/admin/login", data, config)
       .then((response) => {
-       // console.log(response.data.accessToken); // --------- for debugging purpose only.
         login(response.data.accessToken);
         navigate("/admin/dashboard");
       })
@@ -41,7 +40,7 @@ const Login = () => {
   return (
     <div>
       <h1 className={style.test}>Login</h1>
-      This is testing font - ignore me
+      {isAuthenticated && "already logged in"}
       <form onSubmit={handleSubmit}>
         <label>Email:</label>
         <input

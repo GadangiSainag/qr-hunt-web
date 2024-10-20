@@ -1,7 +1,7 @@
 // Import necessary Firebase modules
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import 'dotenv'
+
 // Firebase configuration (replace this with your actual Firebase project config)
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_REACT_APP_ADMIN_API_KEY,

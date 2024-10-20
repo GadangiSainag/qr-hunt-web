@@ -13,11 +13,11 @@ const router = Router();
 // public routes
 router.post("/login", login);
 
-// private routes
 
 // request goes through this middleware then pased to correct route.
 
-router.use(authenticateToken) //- correct code, but disabled for testing. 
+router.use(authenticateToken) 
+// private routes
 
 router.post("/questions/add", addQuestions);
 router.post("/team", registerTeam);

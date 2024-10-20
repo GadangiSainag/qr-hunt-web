@@ -6,7 +6,7 @@ export interface User {
   password: number;
 }
 
-interface IAuthRequest extends Request {
+export interface IAuthRequest extends Request {
   user?: {
     id: string;
     role: string;
@@ -18,32 +18,28 @@ export const authenticateToken: (
   res: Response,
   next: NextFunction
 ) => void = (req, res, next) => {
-
   const authHeader = req.headers["authorization"];
-  
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "No token provided" });
   }
 
-  const token = authHeader.split(' ')[1];
- 
-  try {
+  // req.header.authorization = `Bearer <jwt Token>`
+  // Obtaining only accessToken from header, removing 'Bearer '
+  const token = authHeader.split(" ")[1];
 
+  try {
     const decoded = jwt.verify(
       token,
-      process.env.ACCESS_TOKEN_SECRET as string 
+      process.env.ACCESS_TOKEN_SECRET as string
     ) as JwtPayload;
-    req.user = { id: decoded.id, role: decoded.role };
+    // If needed in future, this can add details to request and send it to next approprate endpoint 
+    // (access it as const user = req.user)
+    // req.user = { id: decoded.id, role: decoded.role };
     next();
-
-  } catch (err) { 
+  } catch (err) {
     return res
-      .status(403)
+      .status(401)
       .json({ error: "Access token is invalid or expired" });
   }
-
-
-  console.log("middleware");
-  
-
 };
