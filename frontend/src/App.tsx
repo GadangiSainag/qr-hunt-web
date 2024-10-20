@@ -14,9 +14,10 @@ import {
   responseInterceptor,
   errorInterceptor,
 } from "./interceptors/response.interceptor";
-import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import ListAllQuestions from "./Components/ListAllQuestions";
+import Info from "./Pages/Game/Info";
+import AuthContextProvider from "./context/AuthContextprovider";
 
 function App() {
   // axios.interceptors.request.use(requestInterceptor);
@@ -25,11 +26,13 @@ function App() {
   axios.interceptors.response.use(responseInterceptor, errorInterceptor);
 
   return (
-    <AuthProvider>
+    <AuthContextProvider >
       <BrowserRouter>
         <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/home" element={<Home />} />
+
+        <Route path="/information" element={<Info />} />
 
         <Route path="/instructions" element={<Home />} />
 
@@ -41,27 +44,29 @@ function App() {
 
         <Route path="/404" element={<LostPage />} />
 
-        <Route path="/admin/questions" element={<ListAllQuestions />} />
+        {/* <Route path="/admin/questions" element={<ListAllQuestions />} /> */}
+        <Route
+            path="/admin/questions"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <ListAllQuestions />
+              </ProtectedRoute>
+            }
+          />
 
         <Route
             path="/admin/dashboard"
             element={
-              <ProtectedRoute allowedRoles={['user', 'admin']}>
+              <ProtectedRoute allowedRoles={[ 'admin']}>
                 <Dashboard />
               </ProtectedRoute>
             }
           />
 
         {/* <Route path="/admin/dashboard" element={<Dashboard />} /> */}
+
         <Route path="/admin/register-team" element={<RegisterTeam />} />
-        {/* <Route
-            path="/admin/register-team"
-            element={
-              <ProtectedRoute allowedRoles={[ 'admin']}>
-               <RegisterTeam />
-              </ProtectedRoute>
-            }
-          /> */}
+        
      
 
         <Route path="/game/ready" element={<GetReady />} />
@@ -71,7 +76,7 @@ function App() {
         {/* <Route path="/en/:id" element={} /> */}
         </Routes>
       </BrowserRouter>
-    </AuthProvider>
+    </AuthContextProvider>
   );
 }
 

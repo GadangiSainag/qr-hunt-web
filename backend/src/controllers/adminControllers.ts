@@ -13,7 +13,7 @@ import { stringToStringArray } from "../utils/converter";
 export interface IUser {
   id: string;
   role: "admin" | "player";
-  refreshToken?: string;
+  // refreshToken?: string;
 }
 
 export interface JWTPayload {
@@ -30,48 +30,44 @@ export const login = async (req: Request, res: Response) => {
       res.status(403).json({ message: "Please fill all required fields!" });
       return;
     }
-    const docRef = db.collection("admin").doc(`${userName}`);
-    const doc = await docRef.get();
-
-    if (!doc.exists) {
-      //  if admin doesnot exists
-      res.status(404).json({
-        message: "No admin details found, please register yourself from db",
-      });
-    } else {
-      // if  admin exists
+    const snapshot = await db.collection("admin")
+      .where("admin", '==', userName)
+      .get();
+//           admin(field) : value
+    if (!snapshot.empty) {
+      // doc with admin name found, usually gives an array (use forEach)
+      snapshot.forEach(doc => {
+      // admin doc exists
       const allData = doc.data();
 
-      // wrong password
-      if (allData?.password != password) {
-        res.status(401).json({ message: "wrong password" });
+      if (allData.password != password) {
+        // wrong password
+        res.status(400).json({ message: "INCORRECT PASSWORD" });
       } else {
         // correct password, allow admin to dashboard
         const accessToken = generateAccessToken({
-          id: allData?.id,
-          role: allData?.role,
+          id: allData.id,
+          role: allData.role,
         });
         const refreshToken = generateRefreshToken({
-          id: allData?.id,
-          role: allData?.role,
+          id: allData.id,
+          role: allData.role,
         });
 
         console.log("token created");
-        docRef.update({
-          refreshToken: refreshToken,
-        });
-
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          secure: false,
+          secure: true,
           sameSite: "strict",
         });
-
-        res.json({ accessToken: accessToken });
-
-        // res.status(200).json({ message: "correct admin", token: createdToken });
+        res.status(200).json({ accessToken: accessToken });
       }
+      });
+    } else {
+      // admin name not matched
+      console.log('No matching document found.');
     }
+
   } catch (error) {
     res.status(500).json({ message: "Error registering admin, ", error });
   }
@@ -120,7 +116,8 @@ export const registerTeam = async (
 ) => {
   try {
     const { players, teamName, questions, huntId }: ITeamDetails = req.body;
-
+    const { user } = req.body;
+    console.log(user);
     if (!(teamName && questions && huntId && players)) {
       res
         .status(403)
@@ -134,7 +131,7 @@ export const registerTeam = async (
       try {
         const teamData = {
           teamName: data.teamName,
-          players: stringToStringArray(data.players),
+          players: stringToStringArray(data.players, true),
           hash: createSHA256Hash(teamName, process.env.HASH_SALT),
           huntId: data.huntId,
           startTime: null,
@@ -154,7 +151,7 @@ export const registerTeam = async (
           .collection("gameProgress")
           .doc(generatedTeamId);
         // convert string as string array of question custom id
-        const questionSet = stringToStringArray(questions);
+        const questionSet = stringToStringArray(questions, false);
 
         const questionSetData = questionSet.map((eachQuestion: string) => ({
           questionId: eachQuestion,
@@ -187,6 +184,6 @@ export const registerTeam = async (
   } catch (error) {
     // Handle the error appropriately
     console.error("Error storing question:", error);
-    res.status(400).json({message : "error creating team"});
+    res.status(400).json({ message: "error creating team" });
   }
 };

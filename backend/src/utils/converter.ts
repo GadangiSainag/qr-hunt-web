@@ -1,6 +1,10 @@
-export function stringToStringArray(baseString: string): string[] {
+export function stringToStringArray(
+  baseString: string,
+  caseSensitive: boolean
+): string[] {
   return baseString
-    .toLowerCase()
-    .split(" ")
-    .filter((item) => item !== "");
+    ?.split(",")
+    .map((element) =>
+      caseSensitive ? element.trim() : element.trim().toLowerCase()
+    );
 }

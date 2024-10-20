@@ -5,21 +5,14 @@ import {
   registerTeam,
 } from "../controllers/adminControllers";
 import { authenticateToken } from "../middlewares/authMiddleware";
+import { refreshToken } from "../controllers/tokenControllers";
 
 const router = Router();
 
 // /api/admin/
 
 // public routes
-router.post("/login", login);
+router.post("/refresh-token", refreshToken);
 
-// private routes
-
-// request goes through this middleware then pased to correct route.
-
-router.use(authenticateToken) //- correct code, but disabled for testing. 
-
-router.post("/questions/add", addQuestions);
-router.post("/team", registerTeam);
 
 export default router;

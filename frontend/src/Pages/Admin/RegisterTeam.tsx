@@ -36,6 +36,7 @@ const RegisterTeam = () => {
         if (response.status === 200) {
           const qrString = JSON.stringify(response.data); // Consider including relevant data from response
           setQrData(qrString);
+          
         } else {
           console.error("Error registering team:", response.data);
           // Handle errors gracefully (e.g., display error message to user)

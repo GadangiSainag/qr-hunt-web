@@ -1,7 +1,7 @@
 import { Request, response, Response } from "express";
 
 import { db } from "../config/db";
-import { Question, TeamData } from "../interfaces/types";
+import {  TeamData } from "../interfaces/types";
 
 export const authTeam = async (req: Request, res: Response) => {
   try {
@@ -9,9 +9,10 @@ export const authTeam = async (req: Request, res: Response) => {
     // read hash and if its present in admin assigned hashes from db, allow player else no entry.
 
     // retrive fields from request
-    const { teamId, teamName, hash, questionSet }: TeamData = req.body;
+    const { teamId, hash } = req.body;
 
-    const teamDetails = db.collection("teams").doc(`${teamId}`);
+    const teamDetails = db.collection("allTeams").doc(teamId);
+
     const teamDoc = await teamDetails.get();
 
     if (!teamDoc.exists) {
@@ -28,12 +29,13 @@ export const authTeam = async (req: Request, res: Response) => {
       // wrong hash
       if (allData?.hash != hash) {
         console.log("Please scan qr that is given by admin.");
-        res.json({ mssg: "wrong code" }).status(401);
+        res.json({ mssg: "INCORRECT PASSWORD" }).status(400);
       } else {
         // correct hash ------------
+
   //  send them a token to identify their team and question data
         
-        res.status(200).json({ mssg: "correct, get in this page!!" });
+        res.status(200).json({ mssg: "Logged In." });
         //
       }
     }
