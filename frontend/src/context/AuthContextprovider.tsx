@@ -24,9 +24,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
         if (decodedToken.exp && decodedToken.exp > currentTime) {
           // Token is valid
           setIsAuthenticated(true);
-
           setRole(decodedToken.role);
-
           console.log("User is authenticated, role:", decodedToken.role);
         } else {
         //   Let axios interceptor handle Expired token

@@ -3,10 +3,7 @@ import { Request, response, Response } from "express";
 import { db } from "../config/db";
 import createSHA256Hash from "../utils/createHash";
 import { IQuestion, ITeamDetails, TeamData } from "../interfaces/types";
-import { messaging } from "firebase-admin";
 
-import jwt, { PrivateKey } from "jsonwebtoken";
-import { Encoding } from "crypto";
 import { generateAccessToken, generateRefreshToken } from "./tokenControllers";
 import { stringToStringArray } from "../utils/converter";
 import { IAuthRequest } from "../middlewares/authMiddleware";
@@ -24,59 +21,79 @@ export interface JWTPayload {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    // retrive fields from request
+   
     const { userName, password } = req.body;
 
     if (!(userName && password)) {
       res.status(403).json({ message: "Please fill all required fields!" });
       return;
     }
+
+
     const snapshot = await db.collection("admin")
-      .where("admin", '==', userName)
+      .where("admin", "==", userName)
       .get();
-//           admin(field) : value
+
+    // Check if the snapshot is not empty 
     if (!snapshot.empty) {
-      // doc with admin name found, usually gives an array (use forEach)
-      snapshot.forEach(doc => {
-      // admin doc exists
-      const allData = doc.data();
+      let isHandled = false;
+      
+      for (const doc of snapshot.docs) {
+        const allData = doc.data();
 
-      if (allData.password != password) {
-        // wrong password
-        res.status(400).json({ message: "INCORRECT PASSWORD" });
-      } else {
-        // correct password, allow admin to dashboard
-        const accessToken = generateAccessToken({
-          id: allData.id,
-          role: allData.role,
-        });
-        const refreshToken = generateRefreshToken({
-          id: allData.id,
-          role: allData.role,
-        });
+        // Compare provided password with the stored password
+        if (allData.password !== password) {
+          // Wrong password, send error response
+          res.status(400).json({ message: "INCORRECT PASSWORD" });
+          isHandled = true;
+          break;
+        } else {
+          // Correct password, generate access and refresh tokens
+          const accessToken = generateAccessToken({
+            id: doc.id,
+            role: allData.role,
+          });
+          const refreshToken = generateRefreshToken({
+            id: doc.id,
+            role: allData.role,
+          });
 
-        console.log("token created");
-        res.cookie("refreshToken", refreshToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "strict",
-        });
-        res.status(200).json({ accessToken: accessToken });
+          // Set refresh token as an HTTP-only cookie
+          res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+          });
+
+          // Send the access token in the response
+          res.status(200).json({ accessToken: accessToken });
+          isHandled = true;
+          break;
+        }
       }
-      });
+
+      if (!isHandled) {
+        // No document processed (this should not occur if .empty is false)
+        res.status(500).json({ message: "Error processing login" });
+      }
+
     } else {
-      // admin name not matched
+      // No admin name matched
       console.log('No matching document found.');
+      res.status(404).json({ message: "ADMIN NOT FOUND, Go register yourself in db" });
     }
 
   } catch (error) {
-    res.status(500).json({ message: "Error registering admin, ", error });
+    console.error("Login Error: ", error);
+    res.status(500).json({ message: "Error logging in admin" });
   }
 };
+
 
 export const addQuestions = async (req: Request, res: Response) => {
   try {
     const { questions } = req.body;
+
     if (!questions) {
       res.status(403).json({ message: "please provide correct information." });
       return;
@@ -90,15 +107,15 @@ export const addQuestions = async (req: Request, res: Response) => {
             questionText: element.questionText,
             hint: element.hint,
             difficulty: element.difficulty,
-            hash: createSHA256Hash(element.custonId, process.env.HASH_SALT),
+            hash: createSHA256Hash(element.customId, process.env.HASH_SALT),
           };
 
-          // await questionsRef.doc(`${element.custonId}`).set(questionData);
+          // await questionsRef.doc(`${element.customId}`).set(questionData);
           // creating a doc with auto generated id
           const res = await questionsRef.add(questionData);
         } catch (error) {
           // Handle the error appropriately
-          console.error("Error storing question:", error);
+          console.error("Error storing question: ", error);
         }
       }
     }

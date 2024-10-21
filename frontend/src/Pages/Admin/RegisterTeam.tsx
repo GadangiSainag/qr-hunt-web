@@ -12,10 +12,10 @@ const RegisterTeam = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = {
-      players,
-      teamName,
-      huntId,
-      questions,
+      players :players.trim(),
+      teamName: teamName.trim(),
+      huntId : huntId.trim(),
+      questions: questions.trim(),
     };
 
     const config = {

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
+import { db } from "../config/db";
 
 export interface User {
   id: string;
@@ -33,10 +34,15 @@ export const authenticateToken: (
       token,
       process.env.ACCESS_TOKEN_SECRET as string
     ) as JwtPayload;
-    // If needed in future, this can add details to request and send it to next approprate endpoint 
-    // (access it as const user = req.user)
-    // req.user = { id: decoded.id, role: decoded.role };
+    if (!(decoded.id && decoded.role)) {
+      // access token does not have id, role fields
+      return res.status(400).json({ message: "INCORRECT TOKEN" });
+    }
     next();
+    // If needed in future, this can add details to request and send it to next approprate endpoint
+    // (access it as const user = req.user)
+    req.user = { id: decoded.id, role: decoded.role };
+
   } catch (err) {
     return res
       .status(401)

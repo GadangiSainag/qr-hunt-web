@@ -5,7 +5,9 @@ const QrScanner = () => {
     // const id = 'a3';
   function onSuccessScan(result: IDetectedBarcode[]) {
     // qr raw data as string
+
     console.log(result[0].rawValue);
+    
     const scannedData =  JSON.parse(result[0].rawValue)
     
     
