@@ -1,9 +1,8 @@
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 const TeamLogin = () => {
-const navigate = useNavigate();
+  const navigate = useNavigate();
   function onSuccessScan(result: IDetectedBarcode[]) {
     // qr raw data as string
     console.log(result[0].rawValue);
@@ -23,16 +22,15 @@ const navigate = useNavigate();
     axios
       .post("/api/team/login/", data, config)
       .then((response) => {
-          if(response.status === 200){
-        // team will get a token from server,
+        if (response.status === 200) {
+          // team will get a token from server,
 
-        // token will be stored here
+          // token will be stored here
 
-        // redirect to ready page
-        navigate('/game/ready')
-    }
+          // redirect to ready page
+          navigate("/game/ready");
+        }
         console.log(response);
-
       })
       .catch((error) => {
         console.error(error);
@@ -53,9 +51,10 @@ const navigate = useNavigate();
     >
       <Scanner
         onScan={onSuccessScan}
+        allowMultiple={false}
         scanDelay={2000}
-        styles={{ finderBorder: 30, container: { width: "100vw" } }}
-        components={{ onOff: true, finder: true, audio: true }}
+        styles={{ finderBorder: 30 }}
+        components={{ onOff: true, finder: true, audio: true}}
       />
     </div>
   );
