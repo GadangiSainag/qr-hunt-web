@@ -1,18 +1,28 @@
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import classes from "./login.module.css";
+import { useAuth } from "../../context/util";
 const TeamLogin = () => {
-  const navigate = useNavigate();
-  function onSuccessScan(result: IDetectedBarcode[]) {
-    // qr raw data as string
-    console.log(result[0].rawValue);
+  const [showScanner, setShowScanner] = useState(false);
+  const [scanning, setScanning] = useState(true);
+  const [redirecting, setRedirecting] = useState(false);
+  const [isInvalid, setInvalidStatus] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("Scan to Login");
+  const { login } = useAuth();
 
-    // const scannedData = JSON.parse(result[0].rawValue);
+  const navigate = useNavigate();
+
+  const toggleScanner = () => {
+    setShowScanner(!showScanner);
+  };
+  function onSuccessScan(result: IDetectedBarcode[]) {
+    const scannedData = JSON.parse(result[0].rawValue);
 
     const data = {
-      // teamId: scannedData.teamId,
-      // hash: scannedData.teamHash,
-      message: result[0].rawValue,
+      teamId: scannedData.id,
+      hash: scannedData.password,
     };
 
     const config = {
@@ -20,15 +30,22 @@ const TeamLogin = () => {
         "Content-Type": "application/json",
       },
     };
+
     axios.defaults.withCredentials = true;
+
     axios
-      .post("/api/team/test", data, config)
+      .post("/api/team/login", data, config)
       .then((response) => {
-        if (response.status === 200) {
+        if (response.status != 200) {
+          setInvalidStatus(true);
+          setWarningMessage(
+            "Wrong QR, contact GAME Organizer in case of an issue."
+          );
+        } else {
+          setScanning(false);
+          setRedirecting(true);
           // team will get a token from server,
-
-          // token will be stored here
-
+          login(response.data.accessToken);
           // redirect to ready page
           navigate("/game/ready");
         }
@@ -42,22 +59,41 @@ const TeamLogin = () => {
   }
 
   return (
-    <div
-      style={{
-        width: "100vw",
-        padding: "0px",
-        margin: "0px",
-        borderColor: "red",
-        borderWidth: "10px",
-      }}
-    >
-      <Scanner
-        onScan={onSuccessScan}
-        allowMultiple={true}
-        scanDelay={2000}
-        styles={{ finderBorder: 30 }}
-        components={{ onOff: true, finder: true, audio: true }}
-      />
+    <div>
+      <div className={classes["qr-scanner-container"]}>
+        {redirecting ? (
+          <div className={classes["redirect-message"]}>
+            Redirecting to the main page...
+          </div>
+        ) : (
+          <>
+            {showScanner && (
+              <Scanner
+                onScan={onSuccessScan}
+                scanDelay={2000}
+                styles={{
+                  video: { width: "100%", height: "100%", objectFit: "cover" },
+                }} // Full-screen video
+                constraints={{
+                  aspectRatio: 1, // You can manipulate this aspect ratio
+                  facingMode: "environment",
+                }}
+              />
+            )}
+            <button
+              className={classes["toggle-button"]}
+              onClick={toggleScanner}
+            >
+              {showScanner ? "Hide Camera" : "Open Camera"}
+            </button>
+          </>
+        )}
+      </div>
+      {isInvalid && (
+        <div className={classes.warning} style={{ color: "red" }}>
+          {warningMessage}
+        </div>
+      )}
     </div>
   );
 };

@@ -46,15 +46,18 @@ function App() {
           <Route path="/404" element={<LostPage />} />
 
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-          {/* Protected routes for only admin */}
+            {/* Protected routes for only admin */}
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/questions" element={<ListAllQuestions />} />
             <Route path="/admin/register-team" element={<RegisterTeam />} />
           </Route>
-          {/* <Route element={<ProtectedRoute allowedRoles={["admin"]} />}></Route> */}
-          {/* <Route path="/admin/dashboard" element={<Dashboard />} /> */}
+          
 
-          <Route path="/game/ready" element={<GetReady />} />
+          <Route element={<ProtectedRoute allowedRoles={["player"]} />}>
+            {/* Protected routes for players only */}
+
+            <Route path="/game/ready" element={<GetReady />} />
+          </Route>
 
           <Route path="/*" element={<Navigate to="/404" />} />
 

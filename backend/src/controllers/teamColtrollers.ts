@@ -2,6 +2,7 @@ import { Request, response, Response } from "express";
 
 import { db } from "../config/db";
 import { TeamData } from "../interfaces/types";
+import { generateAccessToken, generateRefreshToken } from "./tokenControllers";
 
 export const authTeam = async (req: Request, res: Response) => {
   try {
@@ -10,6 +11,7 @@ export const authTeam = async (req: Request, res: Response) => {
 
     // retrive fields from request
     const { teamId, hash } = req.body;
+    
 
     const teamDetails = db.collection("allTeams").doc(teamId);
 
@@ -21,7 +23,7 @@ export const authTeam = async (req: Request, res: Response) => {
         "Team not registered, if already registered, please contact admin"
       );
       res.set("Cache-Control", "no-store");
-      res.status(404).json({ no: "entry buddy" });
+      res.status(404).json({ message: "INVALID CREDENTIALS" });
     } else {
       // if  team exists
       const allData = teamDoc.data();
@@ -29,13 +31,30 @@ export const authTeam = async (req: Request, res: Response) => {
       // wrong hash
       if (allData?.hash != hash) {
         console.log("Please scan qr that is given by admin.");
-        res.json({ mssg: "INCORRECT PASSWORD" }).status(400);
+        res.status(400).json({ mssg: "INCORRECT PASSWORD" });
       } else {
         // correct hash ------------
 
         //  send them a token to identify their team and question data
+        const accessToken = generateAccessToken({
+          id: teamDoc.id,
+          role: 'player',
+        });
+        const refreshToken = generateRefreshToken({
+          id: teamDoc.id,
+          role: 'player',
+        });
 
-        res.status(200).json({ mssg: "Logged In." });
+        // Set refresh token as an HTTP-only cookie
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "strict",
+        });
+
+        // Send the access token in the response
+        res.status(200).json({ accessToken: accessToken });
+       
         //
       }
     }

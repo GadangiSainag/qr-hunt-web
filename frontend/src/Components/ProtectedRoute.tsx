@@ -15,7 +15,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   }
   // If user is not authenticated, redirect to login page
   if (!isAuthenticated) {
-    return <Navigate to={`/${role == "player" ? "team" : "admin"}/login`} />;
+    return <Navigate to={`/team/login`} />;
   }
 
   // If user role is not allowed, redirect to unauthorized page
