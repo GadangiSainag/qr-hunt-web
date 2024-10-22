@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import styles from "./register.module.css";
+import classes from "./register.module.css";
 import Qr from "../../Components/Qr";
 // import style from './login.module.css'
 const RegisterTeam = () => {
@@ -87,7 +87,7 @@ const RegisterTeam = () => {
         <br />
         <button type="submit">Register Team</button>
       </form>
-      <div className={styles.qrContainer}>
+      <div className={classes.qrContainer}>
         {qrData && <Qr qrData={qrData} qrSize={200} />}
       </div>
     </div>

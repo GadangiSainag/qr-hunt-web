@@ -6,11 +6,13 @@ const TeamLogin = () => {
   function onSuccessScan(result: IDetectedBarcode[]) {
     // qr raw data as string
     console.log(result[0].rawValue);
-    const scannedData = JSON.parse(result[0].rawValue);
+
+    // const scannedData = JSON.parse(result[0].rawValue);
 
     const data = {
-      teamId: scannedData.teamId,
-      hash: scannedData.teamHash,
+      // teamId: scannedData.teamId,
+      // hash: scannedData.teamHash,
+      message: result[0].rawValue,
     };
 
     const config = {
@@ -20,7 +22,7 @@ const TeamLogin = () => {
     };
     axios.defaults.withCredentials = true;
     axios
-      .post("/api/team/login/", data, config)
+      .post("/api/team/test", data, config)
       .then((response) => {
         if (response.status === 200) {
           // team will get a token from server,
@@ -51,10 +53,10 @@ const TeamLogin = () => {
     >
       <Scanner
         onScan={onSuccessScan}
-        allowMultiple={false}
+        allowMultiple={true}
         scanDelay={2000}
         styles={{ finderBorder: 30 }}
-        components={{ onOff: true, finder: true, audio: true}}
+        components={{ onOff: true, finder: true, audio: true }}
       />
     </div>
   );

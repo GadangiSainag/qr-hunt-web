@@ -1,7 +1,7 @@
 import { Request, response, Response } from "express";
 
 import { db } from "../config/db";
-import {  TeamData } from "../interfaces/types";
+import { TeamData } from "../interfaces/types";
 
 export const authTeam = async (req: Request, res: Response) => {
   try {
@@ -20,8 +20,8 @@ export const authTeam = async (req: Request, res: Response) => {
       console.log(
         "Team not registered, if already registered, please contact admin"
       );
-      res.set('Cache-Control', 'no-store');
-      res.status(404).json({ no: 'entry buddy' });
+      res.set("Cache-Control", "no-store");
+      res.status(404).json({ no: "entry buddy" });
     } else {
       // if  team exists
       const allData = teamDoc.data();
@@ -33,13 +33,23 @@ export const authTeam = async (req: Request, res: Response) => {
       } else {
         // correct hash ------------
 
-  //  send them a token to identify their team and question data
-        
+        //  send them a token to identify their team and question data
+
         res.status(200).json({ mssg: "Logged In." });
         //
       }
     }
   } catch (error) {
     res.status(500).json({ message: "Error logging team", error });
+  }
+};
+
+export const testCommunication = async (req: Request, res: Response) => {
+  try {
+    const { message }: { message: string } = req.body;
+    console.log(message);
+    res.status(200);
+  } catch {
+    console.log("error");
   }
 };
