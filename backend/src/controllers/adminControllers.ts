@@ -21,7 +21,6 @@ export interface JWTPayload {
 
 export const login = async (req: Request, res: Response) => {
   try {
-   
     const { userName, password } = req.body;
 
     if (!(userName && password)) {
@@ -29,15 +28,15 @@ export const login = async (req: Request, res: Response) => {
       return;
     }
 
-
-    const snapshot = await db.collection("admin")
+    const snapshot = await db
+      .collection("admin")
       .where("admin", "==", userName)
       .get();
 
-    // Check if the snapshot is not empty 
+    // Check if the snapshot is not empty
     if (!snapshot.empty) {
       let isHandled = false;
-      
+
       for (const doc of snapshot.docs) {
         const allData = doc.data();
 
@@ -76,19 +75,18 @@ export const login = async (req: Request, res: Response) => {
         // No document processed (this should not occur if .empty is false)
         res.status(500).json({ message: "Error processing login" });
       }
-
     } else {
       // No admin name matched
-      console.log('No matching document found.');
-      res.status(404).json({ message: "ADMIN NOT FOUND, Go register yourself in db" });
+      console.log("No matching document found.");
+      res
+        .status(404)
+        .json({ message: "ADMIN NOT FOUND, Go register yourself in db" });
     }
-
   } catch (error) {
     console.error("Login Error: ", error);
     res.status(500).json({ message: "Error logging in admin" });
   }
 };
-
 
 export const addQuestions = async (req: Request, res: Response) => {
   try {
@@ -104,6 +102,7 @@ export const addQuestions = async (req: Request, res: Response) => {
       for (const element of questions) {
         try {
           const questionData = {
+            customId: element.customId,
             questionText: element.questionText,
             hint: element.hint,
             difficulty: element.difficulty,

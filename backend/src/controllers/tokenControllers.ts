@@ -16,7 +16,7 @@ export const generateAccessToken = (user: IUser): string => {
 
 // Generate Refresh Token (long-lived)
 export const generateRefreshToken = (user: IUser): string => {
-  return jwt.sign({ id: user.id } as JWTPayload, process.env.REFRESH_TOKEN_SECRET as string, //as string
+  return jwt.sign({ id: user.id, role: user.role } as JWTPayload, process.env.REFRESH_TOKEN_SECRET as string, //as string
      {
     expiresIn: "7d",
   });
@@ -24,37 +24,37 @@ export const generateRefreshToken = (user: IUser): string => {
 
 export const refreshToken = async (
   req: Request,
-  res: Response 
+  res: Response
 ): Promise<void> => {
-  // refresh token from cookie
+  // Get the refresh token from cookies
+
   const refreshToken = req.cookies.refreshToken;
 
-  console.log(refreshToken);
 
   if (!refreshToken) {
     res.status(401).json({ error: "No refresh token provided" });
-    return; // Early exit without returning a response
+    return; // Exit if there's no token
   }
 
   try {
     // Validate refresh token
     const decoded = jwt.verify(
       refreshToken,
-      process.env.REFRESH_TOKEN_SECRET as string 
+      process.env.REFRESH_TOKEN_SECRET as string
     ) as IRefreshTokenPayload;
 
-
-    if (!decoded ) {
+    if (!decoded) {
       res.status(403).json({ error: "Invalid refresh token" });
-      return; // Early exit after sending a response
+      return; // Exit if token is invalid
     }
 
-    // Generate new access token
-    const newAccessToken = generateAccessToken({ id: decoded?.id, role: decoded.role });
-
-    // Send the new access token without returning
+    // Generate a new access token
+    const newAccessToken = generateAccessToken({ id: decoded.id, role: decoded.role });
+    console.log("new Tkn sent")
+    // Send the new access token in the response
     res.json({ accessToken: newAccessToken });
   } catch (err) {
-    res.status(403).json({ error: "Invalid refresh token" });
+    console.error("Error verifying refresh token:", err);
+    res.status(403).json({ error: "Invalid or expired refresh token" });
   }
 };

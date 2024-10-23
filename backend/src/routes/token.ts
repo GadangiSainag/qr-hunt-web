@@ -9,10 +9,10 @@ import { refreshToken } from "../controllers/tokenControllers";
 
 const router = Router();
 
-// /api/admin/
+// /api/token/
 
 // public routes
-router.post("/refresh-token", refreshToken);
+router.post("/refresh", refreshToken);
 
 
 export default router;

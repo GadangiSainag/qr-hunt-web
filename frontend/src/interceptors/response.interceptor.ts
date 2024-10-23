@@ -16,17 +16,17 @@ export const errorInterceptor = async (error: AxiosError) => {
   const originalRequest = error.config as AxiosRequestConfig & {
     _retry?: boolean;
   };
-  const refreshedToken = localStorage.getItem("accessToken");
+  const expiredAccessToken = localStorage.getItem("accessToken");
 
   if (
     error.response.status === 401 &&  !originalRequest._retry &&
-    refreshedToken
+    expiredAccessToken
   ) {
     originalRequest._retry = true;
 
     try {
-      const refreshResponse = await axios.post("/refresh-token", {
-        refreshToken: refreshedToken,
+      const refreshResponse = await axios.post("/api/token/refresh", {
+        accessToken: expiredAccessToken,
       });
       const newAccessToken = refreshResponse.data.accessToken;
 

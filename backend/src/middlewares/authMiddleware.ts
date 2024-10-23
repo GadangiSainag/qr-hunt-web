@@ -34,6 +34,7 @@ export const authenticateToken: (
       token,
       process.env.ACCESS_TOKEN_SECRET as string
     ) as JwtPayload;
+    console.log(decoded)
     if (!(decoded.id && decoded.role)) {
       // access token does not have id, role fields
       return res.status(400).json({ message: "INCORRECT TOKEN" });

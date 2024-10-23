@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import AuthContext, { AuthContextType } from "./AuthContext";
 import { jwtDecode, JwtPayload } from "jwt-decode";
+import axios from "axios";
+
 
 interface IJWTPayload extends JwtPayload {
   id: string;
@@ -12,32 +14,63 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    console.log("Got access token from localStorage: ", token);
+    
+    const handleTokenCheck = async () => {
 
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token) as IJWTPayload; // Decode the JWT payload safely
-        console.log(decodedToken);
-        const currentTime = Date.now() / 1000; // Convert to seconds
+      const token = localStorage.getItem("accessToken");
+      console.log("Got access token from localStorage:", token);
 
-        if (decodedToken.exp && decodedToken.exp > currentTime) {
-          // Token is valid
-          setIsAuthenticated(true);
-          setRole(decodedToken.role);
-          console.log("User is authenticated, role:", decodedToken.role);
-        } else {
-        //   Let axios interceptor handle Expired token
-          console.log("Token is expired.");
+      if (token) {
+        try {
+          const decodedToken = jwtDecode<IJWTPayload>(token);
+          console.log("Decoded Token:", decodedToken);
+          const currentTime = Date.now() / 1000; // Current time in seconds
+
+          // Check if the token is still valid
+          if (decodedToken.exp && decodedToken.exp > currentTime) {
+            // Token is valid
+            setIsAuthenticated(true);
+            setRole(decodedToken.role);
+        
+          } else {
+            // Token is expired, attempt to refresh it
+            console.log("Token is expired. Attempting to refresh...");
+            try {
+              const refreshResponse = await axios.post("/api/token/refresh", {
+                accessToken: token,
+              });
+
+              const newAccessToken = refreshResponse.data.accessToken;
+              
+              localStorage.setItem("accessToken", newAccessToken);
+
+              // Decode the new token and update state
+              const newDecodedToken = jwtDecode<IJWTPayload>(newAccessToken);
+              setIsAuthenticated(true);
+              setRole(newDecodedToken.role);
+              console.log("New token acquired, role:", newDecodedToken.role);
+            } catch (error) {
+              console.error("Failed to refresh token:", error);
+              setIsAuthenticated(false);
+              setRole(null);
+            }
+          }
+        } catch (error) {
+          console.error("Invalid token:", error);
+          setIsAuthenticated(false);
+          setRole(null);
         }
-      } catch (error) {
-        console.error("Invalid token:", error);
+      } else {
+        console.log("No token found.");
+        setIsAuthenticated(false);
       }
-    } else {
-      console.log("No token found.");
-    }
-    setLoading(false)
-  }, []); 
+      setLoading(false);
+    };
+
+    // Call the token check function
+    handleTokenCheck();
+  }, []);
+
   const login = (token: string) => {
     localStorage.setItem("accessToken", token);
     const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decode JWT payload only
@@ -50,7 +83,6 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("accessToken");
     setIsAuthenticated(false);
     setRole(null);
-    
   };
 
   return (
