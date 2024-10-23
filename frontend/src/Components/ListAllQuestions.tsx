@@ -37,7 +37,7 @@ export default function ListAllQuestions() {
   return (
     <div>
       Heres a list of all questions in database
-      <h2>{JSON.stringify(progress)}</h2>
+      <p>{JSON.stringify(progress)}</p>
     </div>
   );
 }

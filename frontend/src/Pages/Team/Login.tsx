@@ -6,10 +6,13 @@ import classes from "./login.module.css";
 import { useAuth } from "../../context/util";
 const TeamLogin = () => {
   const [showScanner, setShowScanner] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [scanning, setScanning] = useState(true);
   const [redirecting, setRedirecting] = useState(false);
+
   const [isInvalid, setInvalidStatus] = useState(false);
-  const [warningMessage, setWarningMessage] = useState("Scan to Login");
+  const [warningMessage, setWarningMessage] = useState("Do a quick Scan practice.");
+
   const { login } = useAuth();
 
   const navigate = useNavigate();
@@ -18,44 +21,54 @@ const TeamLogin = () => {
     setShowScanner(!showScanner);
   };
   function onSuccessScan(result: IDetectedBarcode[]) {
-    const scannedData = JSON.parse(result[0].rawValue);
+    try {
+      console.log(result[0].rawValue);
+      const scannedData = JSON.parse(result[0].rawValue);
 
-    const data = {
-      teamId: scannedData.id,
-      hash: scannedData.password,
-    };
+      const data = {
+        teamId: scannedData.id,
+        hash: scannedData.password,
+      };
 
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
 
-    axios.defaults.withCredentials = true;
+      axios.defaults.withCredentials = true;
 
-    axios
-      .post("/api/team/login", data, config)
-      .then((response) => {
-        if (response.status != 200) {
+      axios
+        .post("/api/team/login", data, config)
+        .then((response) => {
+          if (response.status === 200) {
+            setWarningMessage("Scan Successful.");
+            setInvalidStatus(false);
+            setScanning(false);
+            setRedirecting(true);
+            // team will get a token from server,
+            login(response.data.accessToken);
+            // redirect to ready page
+
+            setTimeout(() => {
+              navigate("/game/ready");
+            }, 2000);
+          }
+          console.log(response);
+        })
+        .catch((error) => {
           setInvalidStatus(true);
           setWarningMessage(
-            "Wrong QR, contact GAME Organizer in case of an issue."
+            "Only scan QR Code that is provided for your team."
           );
-        } else {
-          setScanning(false);
-          setRedirecting(true);
-          // team will get a token from server,
-          login(response.data.accessToken);
-          // redirect to ready page
-          navigate("/game/ready");
-        }
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    console.log(result);
-    // setScannerPasued(true);
+          console.error(error);
+        });
+    } catch {
+      setInvalidStatus(true);
+      setWarningMessage(
+        "Wrong QR, contact GAME Organizer in case of an issue."
+      );
+    }
   }
 
   return (
@@ -89,11 +102,11 @@ const TeamLogin = () => {
           </>
         )}
       </div>
-      {isInvalid && (
-        <div className={classes.warning} style={{ color: "red" }}>
+      
+        <div className={classes.warning} style={{ color: isInvalid ? "red": "green" }}>
           {warningMessage}
         </div>
-      )}
+      
     </div>
   );
 };
