@@ -59,7 +59,7 @@ function App() {
             <Route path="/game/play" element={<MainPage />} />
           </Route>
 
-          <Route path="/*" element={<Navigate to="/404" />} />
+          <Route path="/*" element={<LostPage /> } />
 
           {/* <Route path="/en/:id" element={} /> */}
         </Routes>
