@@ -2,6 +2,7 @@ import { createContext } from "react";
 
 // Define Auth Context Types
 export interface AuthContextType {
+  id:string;
   isAuthenticated: boolean;
   role: "admin"| "player" | null;
   isLoading : boolean;

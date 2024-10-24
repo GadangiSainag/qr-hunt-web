@@ -7,15 +7,15 @@ export interface User {
   password: number;
 }
 
-export interface IAuthRequest extends Request {
+export interface IAuthenticatedRequest extends Request {
   user?: {
     id: string;
-    role: string;
+    role: "team" | "player" | null;
   };
 }
 
 export const authenticateToken: (
-  req: IAuthRequest,
+  req: IAuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => void = (req, res, next) => {
@@ -28,21 +28,21 @@ export const authenticateToken: (
   // req.header.authorization = `Bearer <jwt Token>`
   // Obtaining only accessToken from header, removing 'Bearer '
   const token = authHeader.split(" ")[1];
-
+ 
   try {
     const decoded = jwt.verify(
       token,
       process.env.ACCESS_TOKEN_SECRET as string
     ) as JwtPayload;
-    console.log(decoded)
+    
     if (!(decoded.id && decoded.role)) {
       // access token does not have id, role fields
       return res.status(400).json({ message: "INCORRECT TOKEN" });
     }
+    req.user = { id: decoded.id, role: decoded.role };
     next();
     // If needed in future, this can add details to request and send it to next approprate endpoint
     // (access it as const user = req.user)
-    req.user = { id: decoded.id, role: decoded.role };
 
   } catch (err) {
     return res

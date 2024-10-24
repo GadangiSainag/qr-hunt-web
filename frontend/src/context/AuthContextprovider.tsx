@@ -12,6 +12,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState<AuthContextType["role"]>(null);
   const [isLoading, setLoading] = useState(true);
+  const [id, setId] = useState<string>("");
 
   useEffect(() => {
     
@@ -31,6 +32,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
             // Token is valid
             setIsAuthenticated(true);
             setRole(decodedToken.role);
+            setId(decodedToken.id)
         
           } else {
             // Token is expired, attempt to refresh it
@@ -86,7 +88,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, role, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, role,id, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -6,7 +6,6 @@ import { IQuestion, ITeamDetails, TeamData } from "../interfaces/types";
 
 import { generateAccessToken, generateRefreshToken } from "./tokenControllers";
 import { stringToStringArray } from "../utils/converter";
-import { IAuthRequest } from "../middlewares/authMiddleware";
 
 export interface IUser {
   id: string;
@@ -152,7 +151,7 @@ export const registerTeam = async (
           startTime: null,
           registeredTime: Date.now(),
           lastSeenAt: null,
-          gameStatus: "ready",
+          gameStatus: "READY",
           endTime: null,
           duration: 0,
         };
