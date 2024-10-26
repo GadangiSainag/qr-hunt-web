@@ -39,10 +39,10 @@ export default function AddQuestions() {
       .post("/api/admin/questions/add", data, config)
       .then((response) => {
         //    reset form for new values
-        setCustomid("")
-        setDifficulty("")
-        setHint("")
-        setQuestion("")
+        setCustomid("");
+        setDifficulty("");
+        setHint("");
+        setQuestion("");
         console.log(response.data);
       })
       .catch((error) => {
@@ -90,7 +90,7 @@ export default function AddQuestions() {
             ))}
           </select>
         </div>
-        <button type="submit">Login!!</button>
+        <button type="submit">Add</button>
       </form>
     </div>
   );

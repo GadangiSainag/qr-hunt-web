@@ -4,6 +4,7 @@ import { useAuth } from "../../context/util";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import axios from "axios";
+import QuestionCard from "../../Components/Question/QuestionCard";
 
 function MainPage() {
   const { id } = useAuth();
@@ -65,6 +66,7 @@ function MainPage() {
       timer, Score, TeamName
       <br />
       <Timer initialTimestamp={startTime} />
+      <QuestionCard question={"This is question."} solved={false} />
     </div>
   );
 }

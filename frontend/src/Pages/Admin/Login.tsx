@@ -9,8 +9,8 @@ const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login , isAuthenticated} = useAuth();
-  
+  const { login, role, isAuthenticated } = useAuth();
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -40,7 +40,7 @@ const Login = () => {
   return (
     <div>
       <h1 className={style.test}>Login</h1>
-      {isAuthenticated && "already logged in"}
+      {isAuthenticated && role === 'admin' && "already logged in"}
       <form onSubmit={handleSubmit}>
         <label>Email:</label>
         <input

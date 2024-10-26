@@ -13,7 +13,7 @@ interface IQuestionsProgress {
 }
 
 export default function ListAllQuestions() {
-  const [progress, setProgress] = useState<IQuestionsProgress[] | null>(null);
+  const [questionProgress, setQuestionProgress] = useState<IQuestionsProgress[] | null>(null);
 
   useEffect(() => {
     const questionsCollectionRef = collection(db, "allQuestions");
@@ -26,7 +26,7 @@ export default function ListAllQuestions() {
           ...doc.data(),
         })) as IQuestionsProgress[];
 
-        setProgress(updatedQuestions);
+        setQuestionProgress(updatedQuestions);
         console.log(updatedQuestions);
       }
     );
@@ -37,7 +37,7 @@ export default function ListAllQuestions() {
   return (
     <div>
       Heres a list of all questions in database
-      <p>{JSON.stringify(progress)}</p>
+      <p>{JSON.stringify(questionProgress)}</p>
     </div>
   );
 }
