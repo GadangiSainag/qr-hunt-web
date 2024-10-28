@@ -16,8 +16,8 @@ export default function ListAllQuestions() {
   return (
     <div>
       Heres a list of all questions in database
-      {collectionData.questions?.map((question) => (
-        <div>
+      {collectionData.questions?.map((question, index) => (
+        <div key={index}>
           <QuestionCard question={question.questionText} difficulty={question.difficulty} id={question.customId} />
         </div>
       ))}
