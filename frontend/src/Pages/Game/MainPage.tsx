@@ -1,42 +1,31 @@
 import { useEffect, useState } from "react";
 import Timer from "../../Components/Timer/Timer";
-import { useAuth } from "../../context/util";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
+import {  usePlayerData } from "../../context/hooks";
 import axios from "axios";
-import QuestionCard from "../../Components/Question/QuestionCard";
+import { ITeamVisibleData } from "./GetReady";
 
 function MainPage() {
-  const { id } = useAuth();
-  // const [teamData, setTeamData] = useState<ITeamVisibleData | null>(null);
-  const [fetchAvailable, setFetch] = useState(false);
+  // const { id } = useAuth();
+  const [teamData, setTeamData] = useState<ITeamVisibleData | null>(null);
   const [startTime, setStartTime] = useState<number>(Date.now());
+  const {documentData} = usePlayerData();
+  
+  useEffect(()=> {
 
-  if (fetchAvailable) {
-    const fetchTime = async () => {
-      try {
-        const docRef = doc(db, "allTeams", id); // Specify collection and document ID
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const docData = docSnap.data();
-          // Document data exists
-          setStartTime(docData.startTime);
-        } else {
-          console.log("No such document!");
-        }
-      } catch (error) {
-        console.error("Error fetching document:", error);
-      }
-    };
-    fetchTime();
-    setFetch(false);
-  }
+    console.log(documentData.team);
+    if(documentData.team !=null){
+      
+      setStartTime(documentData.team.startTime)
+    }
+  },[documentData.team])
+    
+    
+    useEffect(() => {
+      const updateStartTime = async () => {
 
-  useEffect(() => {
-    const updateStartTime = async () => {
-      const mountedTime = Date.now();
-      try {
-        const config = {
+        const mountedTime = Date.now();
+        try {
+          const config = {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -45,19 +34,19 @@ function MainPage() {
         axios.defaults.withCredentials = true;
         const data = { startAt: mountedTime };
         axios
-          .post("/api/game/start", data, config)
-          .then((response) => {
-            console.log(response.status);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-        } catch (error) {
-          console.error("Error fetching document:", error);
-        }
+        .post("/api/game/start", data, config)
+        .then((response) => {
+          console.log(response.status);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      } catch (error) {
+        console.error("Error fetching document:", error);
       };
-      updateStartTime();
-      setFetch(true);
+    }
+    updateStartTime();
+ 
   }, []); // Empty dependency array ensures it runs only once on mount
 
   return (
@@ -65,8 +54,9 @@ function MainPage() {
       Main game page where a player spends most of the time <br /> Questions,
       timer, Score, TeamName
       <br />
+
       <Timer initialTimestamp={startTime} />
-      <QuestionCard question={"This is question."} solved={false} />
+     
     </div>
   );
 }

@@ -5,14 +5,14 @@ import axios from "axios";
 
 
 interface IJWTPayload extends JwtPayload {
-  id: string;
+  id: string ;
   role: "admin" | "player" | null;
 }
 const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState<AuthContextType["role"]>(null);
   const [isLoading, setLoading] = useState(true);
-  const [id, setId] = useState<string>("");
+  const [id, setId] = useState<string >();
 
   useEffect(() => {
     
@@ -88,7 +88,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, role,id, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, role, id, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

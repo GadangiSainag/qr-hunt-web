@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import style from "./login.module.css";
 
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/util";
+import { useAuth } from "../../context/hooks";
 const Login = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");

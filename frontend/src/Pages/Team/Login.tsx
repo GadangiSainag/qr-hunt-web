@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import classes from "./login.module.css";
-import { useAuth } from "../../context/util";
+import { useAuth } from "../../context/hooks";
 
 const TeamLogin = () => {
   const [showScanner, setShowScanner] = useState(false);
@@ -26,7 +26,7 @@ const TeamLogin = () => {
       console.log(result[0].rawValue);
       const scannedData = JSON.parse(result[0].rawValue);
 
-      const data = {
+      const data = { 
         teamId: scannedData.id,
         hash: scannedData.password,
       };

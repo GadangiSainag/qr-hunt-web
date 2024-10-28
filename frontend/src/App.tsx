@@ -18,12 +18,15 @@ import {
 import ProtectedRoute from "./Components/ProtectedRoute";
 // import ListAllQuestions from "./Components/ListAllQuestions";
 import Info from "./Pages/Game/Info";
-import AuthContextProvider from "./context/AuthContextprovider";
+import AuthContextProvider from "./context/AuthProvider";
 import QuestionsTab from "./Pages/Admin/QuestionsTab";
+import AdminDataProvider from "./context/AdminProvider";
+import PlayerDataProvider from "./context/PlayerProvider";
 
 function App() {
   // axios.interceptors.request.use(requestInterceptor);
   // Adding interceptors to axios
+
   axios.interceptors.response.use(responseInterceptor, errorInterceptor);
 
   return (
@@ -45,21 +48,34 @@ function App() {
 
           <Route path="/404" element={<LostPage />} />
 
-          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route
+            element={
+              <AdminDataProvider>
+                <ProtectedRoute allowedRoles={["admin"]} />
+              </AdminDataProvider>
+            }
+          >
             {/* Protected routes for only admin */}
             <Route path="/admin/dashboard" element={<Dashboard />} />
+
+            <Route path="/admin/teams" element={<QuestionsTab />} />
             <Route path="/admin/questions" element={<QuestionsTab />} />
             <Route path="/admin/register-team" element={<RegisterTeam />} />
           </Route>
-          
 
-          <Route element={<ProtectedRoute allowedRoles={["player"]} />}>
+          <Route
+            element={
+              <PlayerDataProvider>
+                <ProtectedRoute allowedRoles={["player"]} />
+              </PlayerDataProvider>
+            }
+          >
             {/* Protected routes for players only */}
             <Route path="/game/ready" element={<GetReady />} />
             <Route path="/game/play" element={<MainPage />} />
           </Route>
 
-          <Route path="/*" element={<LostPage /> } />
+          <Route path="/*" element={<LostPage />} />
 
           {/* <Route path="/en/:id" element={} /> */}
         </Routes>

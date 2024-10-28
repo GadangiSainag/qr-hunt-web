@@ -167,22 +167,31 @@ export const registerTeam = async (
         // convert string as string array of question custom id
         const questionSet = stringToStringArray(questions, false);
 
-        const questionSetData = questionSet.map((eachQuestion: string) => ({
-          questionId: eachQuestion,
-          solved: false,
+        const questionsRef = db.collection('allQuestions');
+
+        // Query to get documents where questionId field matches any of the ids in the array
+        const querySnapshot = await questionsRef
+          .where('customId', 'in', questionSet)
+          .get();
+    
+        // Extracting document data
+        const allQuestionsData = querySnapshot.docs.map(doc => ({
+          // id: doc.id,
+          id:doc.data().customId,
+          text: doc.data().questionText,
+          difficulty: doc.data().difficulty,
         }));
 
         const teamProgressData = {
           numberOfQuestions: questionSet.length,
           numberOfSolvedQuestions: 0,
-          questionSet: questionSetData,
+          questionSet: allQuestionsData,
         };
-
         await gameProgressDocRef.set(teamProgressData);
-        //  send teamhash and id as response for team qr generation
+        //  send teamhash and id as response for rending team QR 
         res
           .status(200)
-          .json({ teamId: generatedTeamId, teamHash: teamData.hash });
+          .json({ id: generatedTeamId, password: teamData.hash });
       } catch (error) {
         // Handle the error appropriately
         console.error("Error storing question:", error);

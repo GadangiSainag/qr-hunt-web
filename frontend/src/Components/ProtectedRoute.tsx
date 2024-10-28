@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../context/util";
+import { useAuth } from "../context/hooks";
 
 // Interface for ProtectedRoute Props
 interface ProtectedRouteProps {

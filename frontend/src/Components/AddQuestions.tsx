@@ -8,7 +8,7 @@ export default function AddQuestions() {
   const [questionTxt, setQuestion] = useState("");
   const [hint, setHint] = useState("");
 
-  const [difficulty, setDifficulty] = useState("select");
+  const [difficulty, setDifficulty] = useState("easy");
   const options = [
     { value: "easy", label: "Easy 😎" },
     { value: "medium", label: "Medium 😬" },
@@ -81,6 +81,7 @@ export default function AddQuestions() {
           <select
             required={true}
             value={difficulty}
+            defaultValue={"easy"}
             onChange={(e) => setDifficulty(e.target.value)}
           >
             {options.map((option) => (
