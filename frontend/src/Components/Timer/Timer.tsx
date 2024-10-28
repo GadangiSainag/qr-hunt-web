@@ -32,11 +32,7 @@ const Timer: React.FC<ITimerProps> = ({ initialTimestamp }) => {
     .toString()
     .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 
-//   const stopTimer = () => {
-//     if (intervalRef.current) {
-//       clearInterval(intervalRef.current);
-//     }
-//   };
+
 
   return (
     <div>
