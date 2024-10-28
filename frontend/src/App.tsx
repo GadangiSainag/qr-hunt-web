@@ -22,6 +22,7 @@ import AuthContextProvider from "./context/AuthProvider";
 import QuestionsTab from "./Pages/Admin/QuestionsTab";
 import AdminDataProvider from "./context/AdminProvider";
 import PlayerDataProvider from "./context/PlayerProvider";
+import TeamsTab from "./Pages/Admin/TeamsTab";
 
 function App() {
   // axios.interceptors.request.use(requestInterceptor);
@@ -58,7 +59,7 @@ function App() {
             {/* Protected routes for only admin */}
             <Route path="/admin/dashboard" element={<Dashboard />} />
 
-            <Route path="/admin/teams" element={<QuestionsTab />} />
+            <Route path="/admin/teams" element={<TeamsTab />} />
             <Route path="/admin/questions" element={<QuestionsTab />} />
             <Route path="/admin/register-team" element={<RegisterTeam />} />
           </Route>
