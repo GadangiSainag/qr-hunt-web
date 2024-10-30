@@ -62,9 +62,6 @@ const {documentData} = usePlayerData()
       Important instructions and rules. about game.
       <br />
       {JSON.stringify(documentData.team)}
-
-      
-      
       <button onClick={handleButtonClick}>Start Game </button>
     </div>
   );

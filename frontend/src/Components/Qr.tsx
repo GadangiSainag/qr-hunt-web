@@ -6,7 +6,7 @@ import { QrData } from "../interfaces/types";
 
 export default function Qr(props: QrData) {
   return (
-    <div>
+    <div className="flex justify-center">
       <QRCode
         value={props.qrData}
         size={props.qrSize}

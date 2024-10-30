@@ -1,10 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
-import style from "./login.module.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/hooks";
 import { Button } from "@/Components/ui/button";
-import { Label } from "@/Components/ui/label";
 import { Input } from "@/Components/ui/input";
 import {
   Card,

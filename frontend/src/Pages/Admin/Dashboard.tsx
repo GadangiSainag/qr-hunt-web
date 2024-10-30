@@ -1,12 +1,16 @@
-import { Link } from "react-router-dom";
+import { Button } from "@/Components/ui/button";
+import { useAuth } from "@/context/hooks";
 
 export default function Dashboard() {
-  return <div>
-    Admin dashboard
-    - Edit Teams , add, edit teams
-    - Leaderboard 
-    - Questions , add edit questions, create all qrs questions
-    <Link to={'/information'}/>
-
-    </div>;
+  const { logout } = useAuth();
+  function handleLogout() {
+    logout();
+  }
+  return (
+    <div>
+      Admin dashboard - Edit Teams , add, edit teams - Leaderboard - Questions ,
+      add edit questions, create all qrs questions
+      <Button onClick={handleLogout}>Logout</Button>
+    </div>
+  );
 }
