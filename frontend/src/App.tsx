@@ -23,6 +23,7 @@ import QuestionsTab from "./Pages/Admin/QuestionsTab";
 import AdminDataProvider from "./context/AdminProvider";
 import PlayerDataProvider from "./context/PlayerProvider";
 import TeamsTab from "./Pages/Admin/TeamsTab";
+import { ThemeProvider } from "./Components/theme-provider";
 
 function App() {
   // axios.interceptors.request.use(requestInterceptor);
@@ -31,6 +32,8 @@ function App() {
   axios.interceptors.response.use(responseInterceptor, errorInterceptor);
 
   return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+
     <AuthContextProvider>
       <BrowserRouter>
         <Routes>
@@ -70,7 +73,7 @@ function App() {
                 <ProtectedRoute allowedRoles={["player"]} />
               </PlayerDataProvider>
             }
-          >
+            >
             {/* Protected routes for players only */}
             <Route path="/game/ready" element={<GetReady />} />
             <Route path="/game/play" element={<MainPage />} />
@@ -82,6 +85,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>
+            </ThemeProvider>
   );
 }
 

@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import AuthContext, {  AuthContextType } from "./AuthContext";
 import { FirestoreAdminContext, FirestoreplayerContext } from "./FirestoreContext";
+import { ThemeProviderContext } from "./theme-provider";
 
 export const useAuth = (): AuthContextType => {
     const context = useContext(AuthContext);
@@ -25,3 +26,12 @@ export const usePlayerData = () => {
   }
   return context;
 };
+
+export const useTheme = () => {
+  const context = useContext(ThemeProviderContext)
+
+  if (context === undefined)
+    throw new Error("useTheme must be used within a ThemeProvider")
+
+  return context
+}
