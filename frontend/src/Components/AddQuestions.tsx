@@ -81,7 +81,6 @@ export default function AddQuestions() {
           <select
             required={true}
             value={difficulty}
-            defaultValue={"easy"}
             onChange={(e) => setDifficulty(e.target.value)}
           >
             {options.map((option) => (
