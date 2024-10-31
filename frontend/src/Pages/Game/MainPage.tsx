@@ -15,12 +15,15 @@ import {
 import { BiScan } from "react-icons/bi";
 import { SiTicktick } from "react-icons/si";
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
+
+
 function MainPage() {
   // const { id } = useAuth();
-  const [teamData, setTeamData] = useState<ITeamVisibleData | null>(null);
+  const [focusId, setFocus] = useState("");
   const [startTime, setStartTime] = useState<number>(Date.now());
   const { documentData } = usePlayerData();
   const [dialogOpen, setOpenDialog] = useState(false);
+
   useEffect(() => {
     console.log(documentData.team);
     if (documentData.team != null) {
@@ -61,14 +64,42 @@ function MainPage() {
     );
     if (particularQuestion.status === "PENDING") {
       console.log(particularQuestion.status);
+      setFocus(id)
       setOpenDialog(true)
     }
   }
+
   function onSuccessScan(result: IDetectedBarcode[]){
     console.log("scanned")
-    console.log(result[0].rawValue);
-    
-  }
+    const data = {
+     questionId: focusId,
+      hash: result[0].rawValue
+    };
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    };
+    axios.defaults.withCredentials = true;
+    // loading circle
+    axios
+      .post("/api/team/validate", data, config)
+      .then((response) => {
+        console.log(response.data);
+        if (response.status === 200) {
+          //  Show a tost for correct answer and close scanner
+          setOpenDialog(false); //close scanner
+        } else {
+          console.error("Error registering team:", response.data);
+          // Handle errors gracefully (e.g., display error message to user)
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  
 
   return (
     <div>

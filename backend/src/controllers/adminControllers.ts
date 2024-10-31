@@ -162,7 +162,6 @@ export const registerTeam = async (
         .json({ message: "Please provide all required information." });
       return;
     }
-
     const teamsRef = db.collection("allTeams");
 
     async function registerFunc(data: ITeamDetails) {
@@ -174,30 +173,23 @@ export const registerTeam = async (
           huntId: data.huntId,
           startTime: null,
           registeredTime: Date.now(),
-          lastSeenAt: null,
           gameStatus: "READY",
           endTime: null,
           duration: 0,
         };
-
         const thisTeamRef = await teamsRef.add(teamData);
-
         const generatedTeamId = thisTeamRef.id;
-
         // create document for game progress collection.
         const gameProgressDocRef = db
           .collection("gameProgress")
           .doc(generatedTeamId);
         // convert string as string array of question custom id
         const questionSet = stringToStringArray(questions, false);
-
         const questionsRef = db.collection("allQuestions");
-
         // Query to get documents where questionId field matches any of the ids in the array
         const querySnapshot = await questionsRef
           .where("customId", "in", questionSet)
           .get();
-
         // Extracting document data
         const allQuestionsData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -205,8 +197,8 @@ export const registerTeam = async (
           difficulty: doc.data().difficulty,
           status: "PENDING",
         }));
-
         const teamProgressData = {
+          lastSeenAt: null,
           numberOfQuestions: allQuestionsData.length,
           numberOfSolvedQuestions: 0,
           questionSet: allQuestionsData,

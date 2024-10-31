@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import { authTeam, testCommunication } from '../controllers/teamColtrollers';
+import { authTeam,  validateAnswer } from '../controllers/teamColtrollers';
 import { authenticateToken } from '../middlewares/authMiddleware';
 
 const router = Router();
 
 // /api/team/
 router.post('/login', authTeam);
-router.post('/test', testCommunication)
 
 router.use(authenticateToken) 
+router.post('/validate', validateAnswer)
 // private routes
 
 export default router;
