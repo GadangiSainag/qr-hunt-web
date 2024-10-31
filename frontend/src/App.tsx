@@ -61,7 +61,6 @@ function App() {
           >
             {/* Protected routes for only admin */}
             <Route path="/admin/dashboard" element={<Dashboard />} />
-
             <Route path="/admin/teams" element={<TeamsTab />} />
             <Route path="/admin/questions" element={<QuestionsTab />} />
             <Route path="/admin/register-team" element={<RegisterTeam />} />

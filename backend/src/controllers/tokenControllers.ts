@@ -32,7 +32,7 @@ export const refreshToken = async (
 
 
   if (!refreshToken) {
-    res.status(401).json({ error: "No refresh token provided" });
+    res.status(404).json({ error: "No refresh token provided" });
     return; // Exit if there's no token
   }
 

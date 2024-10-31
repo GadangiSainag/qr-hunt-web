@@ -124,6 +124,30 @@ export const addQuestions = async (req: Request, res: Response) => {
     res.status(400);
   }
 };
+export const deleteQuestion = async (req: Request, res: Response) => {
+  try {
+    const { questionId } = req.body;
+
+    if (!questionId) {
+      res.status(403).json({ message: "please provide correct information." });
+      return;
+    }
+
+    async function deleteDocument(collectionName: string, docId: string) {
+      try {
+        await db.collection(collectionName).doc(docId).delete();
+        // console.log(`Document with ID ${docId} deleted successfully.`);
+      } catch (error) {
+        console.error("Error deleting document:", error);
+      }
+    }
+    deleteDocument("allQuestions", questionId);
+    res.status(200).json({ message: "Questions Deleted Successfully." });
+  } catch {
+    console.log("error");
+    res.status(400);
+  }
+};
 
 export const registerTeam = async (
   req: Request<{}, ITeamDetails>,
@@ -167,17 +191,17 @@ export const registerTeam = async (
         // convert string as string array of question custom id
         const questionSet = stringToStringArray(questions, false);
 
-        const questionsRef = db.collection('allQuestions');
+        const questionsRef = db.collection("allQuestions");
 
         // Query to get documents where questionId field matches any of the ids in the array
         const querySnapshot = await questionsRef
-          .where('customId', 'in', questionSet)
+          .where("customId", "in", questionSet)
           .get();
-    
+
         // Extracting document data
-        const allQuestionsData = querySnapshot.docs.map(doc => ({
+        const allQuestionsData = querySnapshot.docs.map((doc) => ({
           // id: doc.id,
-          id:doc.id,
+          id: doc.id,
           text: doc.data().questionText,
           difficulty: doc.data().difficulty,
         }));
@@ -188,10 +212,8 @@ export const registerTeam = async (
           questionSet: allQuestionsData,
         };
         await gameProgressDocRef.set(teamProgressData);
-        //  send teamhash and id as response for rending team QR 
-        res
-          .status(200)
-          .json({ id: generatedTeamId, password: teamData.hash });
+        //  send teamhash and id as response for rending team QR
+        res.status(200).json({ id: generatedTeamId, password: teamData.hash });
       } catch (error) {
         // Handle the error appropriately
         console.error("Error storing question:", error);
