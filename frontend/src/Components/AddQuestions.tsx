@@ -80,7 +80,6 @@ export default function AddQuestions() {
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label>Id</Label>
               <Input
-                placeholder="Try something creative"
                 required={true}
                 type="text"
                 value={customId}
@@ -91,7 +90,6 @@ export default function AddQuestions() {
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label>Challange Text</Label>
               <Input
-                placeholder="John, Sena"
                 required={true}
                 type="text"
                 value={questionTxt}
@@ -121,7 +119,6 @@ export default function AddQuestions() {
                 ))}
               </SelectContent>
             </Select>
-
             <DrawerFooter>
               <Button type="submit" variant="outline">
                 Append 💥
@@ -130,47 +127,6 @@ export default function AddQuestions() {
           </form>
         </DrawerContent>
       </Drawer>
-
-      {/* <form onSubmit={handleSubmit}>
-        <label>Id</label>
-        <input
-          required={true}
-          type="text"
-          value={customId}
-          onChange={(e) => setCustomid(e.target.value)}
-        />
-        <br />
-        <label>Question</label>
-        <input
-          required={true}
-          type="text"
-          value={questionTxt}
-          onChange={(e) => setQuestion(e.target.value)}
-        />
-        <br />
-        <label>Hint</label>
-        <input
-          required={true}
-          type="text"
-          value={hint}
-          onChange={(e) => setHint(e.target.value)}
-        />
-        <br />
-        <div>
-          <select
-            required={true}
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-          >
-            {options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button type="submit">Add</button>
-      </form> */}
     </div>
   );
 }

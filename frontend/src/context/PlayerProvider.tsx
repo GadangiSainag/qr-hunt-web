@@ -11,14 +11,6 @@ const PlayerDataProvider: React.FC<{ children: React.ReactNode }> = ({
   const { id } = useAuth();
   useEffect(() => {
     console.log(id);
-    // const unsubscribeTeam = listenToDocument(
-    //   "allTeams",
-    //   id,
-    //   ["players", "teamName"],
-    //   (data) => {
-    //     setDocumentData((prev) => ({ ...prev, team: data }));
-    //   }
-    // );
     if (id) {
       const unsubscribePlayer = listenToDocument(
         "allTeams",
@@ -44,7 +36,7 @@ const PlayerDataProvider: React.FC<{ children: React.ReactNode }> = ({
       };
     }
 
-    // Add more collections as needed
+    //  more collections Here
   }, [id]);
 
   return (

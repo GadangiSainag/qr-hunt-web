@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import classes from "./login.module.css";
 import { useAuth } from "../../context/hooks";
+import { Button } from "@/Components/ui/button";
 
 const TeamLogin = () => {
   const [showScanner, setShowScanner] = useState(false);
@@ -117,9 +118,9 @@ const TeamLogin = () => {
                 }}
               />
             )}
-            <button className={classes["toggle-button"]} onClick={toggleScanner}>
+            <Button variant="default" className={classes["toggle-button"]} onClick={toggleScanner}>
               {showScanner ? "Hide Camera" : "Open Camera"}
-            </button>
+            </Button>
           </>
         )}
       </div>

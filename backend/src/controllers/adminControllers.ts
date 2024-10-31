@@ -200,14 +200,14 @@ export const registerTeam = async (
 
         // Extracting document data
         const allQuestionsData = querySnapshot.docs.map((doc) => ({
-          // id: doc.id,
           id: doc.id,
           text: doc.data().questionText,
           difficulty: doc.data().difficulty,
+          status: "PENDING",
         }));
 
         const teamProgressData = {
-          numberOfQuestions: questionSet.length,
+          numberOfQuestions: allQuestionsData.length,
           numberOfSolvedQuestions: 0,
           questionSet: allQuestionsData,
         };
