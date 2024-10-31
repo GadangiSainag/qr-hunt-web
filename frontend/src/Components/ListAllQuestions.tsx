@@ -21,6 +21,7 @@ import {
 } from "@/Components/ui/alert-dialog";
 import { useState } from "react";
 import axios from "axios";
+import generatePDFWithQRCode from "@/lib/create-pdf";
 
 export interface IQuestion {
   id: string;
@@ -56,10 +57,16 @@ export default function ListAllQuestions() {
       .catch((error) => {
         console.error(error);
       });
-      setDeleteAlert(false);
+    setDeleteAlert(false);
   }
 
-  function handleQr() {}
+  function handleQr(id: string) {
+    const question = collectionData.questions?.find(
+      (question) => question.id === id
+    );
+    generatePDFWithQRCode(question.hash);
+    console.log("pdf generated");
+  }
 
   return (
     <div>
@@ -88,7 +95,12 @@ export default function ListAllQuestions() {
                   <IoTrashOutline size="1.5em" />
                 </div>
                 <Separator orientation="vertical" />
-                <div className="flex align-middle" onClick={handleQr}>
+                <div
+                  className="flex align-middle"
+                  onClick={() => {
+                    handleQr(question.id);
+                  }}
+                >
                   <IoQrCodeOutline size="1.5em" />
                 </div>
               </div>
