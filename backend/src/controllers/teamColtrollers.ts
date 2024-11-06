@@ -4,6 +4,7 @@ import { db } from "../config/db";
 import { TeamData } from "../interfaces/types";
 import { generateAccessToken, generateRefreshToken } from "./tokenControllers";
 import { IAuthenticatedRequest } from "../middlewares/authMiddleware";
+import { firestore } from "firebase-admin";
 interface IQuestionProgress {
   id: string;
   text: string;
@@ -16,7 +17,15 @@ export const authTeam = async (req: Request, res: Response) => {
     // read hash and if its present in admin assigned hashes from db, allow player else no entry.
 
     // retrive fields from request
-    const { teamId, hash } = req.body;
+    const {
+      teamId,
+      hash,
+      location,
+    }: {
+      teamId: string;
+      hash: string;
+      location: { latitude: number; longitude: number };
+    } = req.body;
 
     const teamDetails = db.collection("allTeams").doc(teamId);
 
@@ -49,6 +58,15 @@ export const authTeam = async (req: Request, res: Response) => {
           id: teamDoc.id,
           role: "player",
         });
+        const teamProgressRef = db.collection("gameProgress").doc(teamId);
+        const geoPoint = new firestore.GeoPoint(
+          location.latitude,
+          location.longitude
+        );
+
+        await teamProgressRef.update({
+          lastSeenAt: geoPoint,
+        });
 
         // Set refresh token as an HTTP-only cookie
         res.cookie("refreshToken", refreshToken, {
@@ -73,7 +91,15 @@ export const validateAnswer = async (
   res: Response
 ) => {
   try {
-    const { questionId, hash } = req.body;
+    const {
+      questionId,
+      hash,
+      location,
+    }: {
+      questionId: string;
+      hash: string;
+      location: { latitude: number; longitude: number };
+    } = req.body;
     const user = req.user;
 
     const questionsRef = db.collection("allQuestions").doc(questionId);
@@ -116,16 +142,57 @@ export const validateAnswer = async (
           status: "SOLVED",
         };
 
+        const geoPoint = new firestore.GeoPoint(
+          location.latitude,
+          location.longitude
+        );
+
         // Update the document with the modified questions array
         await teamProgressRef.update({
+          lastSeenAt: geoPoint,
           numberOfSolvedQuestions: solvedQuestions + 1,
           questionSet,
         });
         res.status(200).json({ message: "CORRECT ANSWER" });
       }
     }
-  } catch {
-    console.log("error");
+  } catch (error){
+    console.log(error);
+
     res.status(500).json({ message: "Error with Qr." });
+  }
+};
+
+export const updateLocation = async (
+  req: IAuthenticatedRequest,
+  res: Response
+) => {
+  try {
+    const {
+      location,
+    }: { location: { latitude: number; longitude: number } } = req.body;
+    const user = req.user;
+
+    const teamProgressRef = db
+      .collection("gameProgress")
+      .doc(user?.id as string);
+
+    const progressDoc = await teamProgressRef.get();
+    if (!progressDoc.exists) {
+      res.status(404).json({ message: "Please check login status." });
+    } else {
+      const geoPoint = new firestore.GeoPoint(
+        location.latitude,
+        location.longitude
+      );
+
+      // Update the document with the modified questions array
+      await teamProgressRef.update({
+        lastSeenAt: geoPoint,
+      });
+      res.status(200).json({ message: "success" });
+    }
+  } catch {
+    res.status(500).json({ message: "Error with Location" });
   }
 };

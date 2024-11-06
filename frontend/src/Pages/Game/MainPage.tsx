@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Timer from "../../Components/Timer/Timer";
 import { usePlayerData } from "../../context/hooks";
 import axios from "axios";
-import { ITeamVisibleData } from "./GetReady";
 import { Label } from "@/Components/ui/label";
 import { Card, CardHeader } from "@/Components/ui/card";
 import {
@@ -16,20 +15,59 @@ import { BiScan } from "react-icons/bi";
 import { SiTicktick } from "react-icons/si";
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 
-
 function MainPage() {
   // const { id } = useAuth();
   const [focusId, setFocus] = useState("");
   const [startTime, setStartTime] = useState<number>(Date.now());
   const { documentData } = usePlayerData();
   const [dialogOpen, setOpenDialog] = useState(false);
-
+  const [location, setLocation] = useState<{
+    latitude?: number;
+    longitude?: number;
+  }>({});
   useEffect(() => {
     console.log(documentData.team);
     if (documentData.team != null) {
       setStartTime(documentData.team.startTime);
     }
   }, [documentData.team]);
+
+  useEffect(() => {
+    const updateLocation = async () => {
+      try {
+        // Get current position
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ latitude, longitude });
+          const data = {
+            location: { latitude, longitude },
+          };
+          const config = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // Assuming token is stored in localStorage
+            },
+          };
+          // Make API call to backend with user's location
+          await axios.post(
+            "/api/team/update-location", // Your backend endpoint
+            data,
+            config
+          );
+        });
+      } catch (error) {
+        console.error("Error updating location:", error);
+      }
+    };
+
+    // Initial call to update location immediately
+    updateLocation();
+
+    // Set interval for every 5 minutes (300,000 ms)
+    const intervalId = setInterval(updateLocation, 300000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     const updateStartTime = async () => {
@@ -64,16 +102,21 @@ function MainPage() {
     );
     if (particularQuestion.status === "PENDING") {
       console.log(particularQuestion.status);
-      setFocus(id)
-      setOpenDialog(true)
+      setFocus(id);
+      setOpenDialog(true);
     }
   }
 
-  function onSuccessScan(result: IDetectedBarcode[]){
-    console.log("scanned")
+  function onSuccessScan(result: IDetectedBarcode[]) {
+    console.log("scanned");
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const { latitude, longitude } = position.coords;
+      setLocation({ latitude, longitude });
+    });
     const data = {
-     questionId: focusId,
-      hash: result[0].rawValue
+      location: location,
+      questionId: focusId,
+      hash: result[0].rawValue,
     };
     const config = {
       headers: {
@@ -98,8 +141,7 @@ function MainPage() {
       .catch((error) => {
         console.error(error);
       });
-  };
-  
+  }
 
   return (
     <div>
@@ -110,20 +152,19 @@ function MainPage() {
             <DialogDescription>Scan to login.</DialogDescription>
           </DialogHeader>
           <Scanner
-          allowMultiple={true}
-                onScan={onSuccessScan}
-                scanDelay={2000}
-                styles={{
-                  video: { width: "100%", height: "100%", objectFit: "cover" },
-                }} // Full-screen video
-                constraints={{
-                  aspectRatio: 1, // You can manipulate this aspect ratio
-                  facingMode: "environment",
-                }}
-              />
+            allowMultiple={true}
+            onScan={onSuccessScan}
+            scanDelay={2000}
+            styles={{
+              video: { width: "100%", height: "100%", objectFit: "cover" },
+            }} // Full-screen video
+            constraints={{
+              aspectRatio: 1, // You can manipulate this aspect ratio
+              facingMode: "environment",
+            }}
+          />
         </DialogContent>
       </Dialog>
-
       <Timer initialTimestamp={startTime} />
       <h1>{documentData.team?.teamName}</h1>
       <Label>

@@ -41,16 +41,14 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
               const refreshResponse = await axios.post("/api/token/refresh", {
                 accessToken: token,
               });
-
               const newAccessToken = refreshResponse.data.accessToken;
-              
               localStorage.setItem("accessToken", newAccessToken);
-
               // Decode the new token and update state
               const newDecodedToken = jwtDecode<IJWTPayload>(newAccessToken);
               setIsAuthenticated(true);
               setRole(newDecodedToken.role);
               console.log("New token acquired, role:", newDecodedToken.role);
+            
             } catch (error) {
               console.error("Failed to refresh token:", error);
               setIsAuthenticated(false);

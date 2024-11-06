@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { db } from "../../firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
-import { useAuth, usePlayerData } from "../../context/hooks";
+import {  usePlayerData } from "../../context/hooks";
 import { Label } from "@/Components/ui/label";
 import { Button } from "@/Components/ui/button";
 export interface ITeamVisibleData {
@@ -12,23 +9,21 @@ export interface ITeamVisibleData {
   huntId: string;
   gameStatus: string;
 
-  // duration:number;
-  // endTime: number | null;
-  // hash:string;
-  // lastSeenAt: string | null;
-  // registeredTime: number;
-  // startTime: number | null;
+
 }
 function GetReady() {
   const navigate = useNavigate();
+  const { documentData ,loading} = usePlayerData();
   function handleButtonClick() {
     // after some transition like 3,2,1. and logo animation
 
     navigate("/game/play");
   }
 
-  const { documentData } = usePlayerData();
   console.log(documentData.team);
+  if (loading) {
+    return <p>Loading data, please wait...</p>; // Render loading state until data is ready
+  }
 
   return (
     <div>
@@ -36,7 +31,7 @@ function GetReady() {
       <h1>{documentData.team?.teamName}</h1>
       <br />
       <h2>Players</h2>
-      {documentData.team?.players.map((player: string, index: number) => (
+      {documentData.team && documentData.team?.players.map((player: string, index: number) => (
         <div key={index}>
           <Label>{player}</Label>
         </div>

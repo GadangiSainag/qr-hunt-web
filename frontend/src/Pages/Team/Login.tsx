@@ -11,7 +11,13 @@ const TeamLogin = () => {
   const [scanning, setScanning] = useState(true);
   const [redirecting, setRedirecting] = useState(false);
   const [isInvalid, setInvalidStatus] = useState(false);
-  const [warningMessage, setWarningMessage] = useState("Do a quick Scan practice.");
+  const [warningMessage, setWarningMessage] = useState(
+    "Do a quick Scan practice."
+  );
+  const [location, setLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  }>();
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -21,15 +27,35 @@ const TeamLogin = () => {
     setShowScanner(!showScanner);
   };
 
+  useEffect(() => {
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+      }
+    );
+
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
+
   // Function to handle scan success
   function onSuccessScan(result: IDetectedBarcode[]) {
     try {
       console.log(result[0].rawValue);
       const scannedData = JSON.parse(result[0].rawValue);
 
-      const data = { 
+      const data = {
         teamId: scannedData.id,
         hash: scannedData.password,
+        location: {
+          latitude: location?.latitude,
+          longitude: location?.longitude,
+        },
       };
 
       const config = {
@@ -39,7 +65,6 @@ const TeamLogin = () => {
       };
 
       axios.defaults.withCredentials = true;
-
       axios
         .post("/api/team/login", data, config)
         .then((response) => {
@@ -118,14 +143,21 @@ const TeamLogin = () => {
                 }}
               />
             )}
-            <Button variant="default" className={classes["toggle-button"]} onClick={toggleScanner}>
+            <Button
+              variant="default"
+              className={classes["toggle-button"]}
+              onClick={toggleScanner}
+            >
               {showScanner ? "Hide Camera" : "Open Camera"}
             </Button>
           </>
         )}
       </div>
 
-      <div className={classes.warning} style={{ color: isInvalid ? "red" : "green" }}>
+      <div
+        className={classes.warning}
+        style={{ color: isInvalid ? "red" : "green" }}
+      >
         {warningMessage}
       </div>
     </div>

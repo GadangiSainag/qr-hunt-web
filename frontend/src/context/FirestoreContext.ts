@@ -7,6 +7,8 @@ interface FirestoreDataContextType {
 }
 interface FirestorePlayerDataContextType {
   documentData: Record<string, any>; // Store data from all collections
+  loading : boolean;
+
 }
 
 export const FirestoreAdminContext = createContext<FirestoreDataContextType | undefined>(undefined);
