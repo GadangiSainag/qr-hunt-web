@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '../ui/button';
 
 interface MapLinkProps {
   latitude: number;
@@ -15,9 +16,9 @@ export const MapLink: React.FC<MapLinkProps> = ({ latitude, longitude }) => {
   };
 
   return (
-    <div onClick={openMap} style={{ padding: '10px', fontSize: '16px' }}>
-      Open Location in Google Maps
-    </div>
+    <Button className = "p-3" onClick={openMap} variant="secondary">
+     Track
+    </Button>
   );
 };
 

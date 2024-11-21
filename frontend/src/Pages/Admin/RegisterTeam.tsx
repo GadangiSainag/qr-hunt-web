@@ -32,6 +32,7 @@ const RegisterTeam = () => {
   const [huntId, setHuntId] = useState("Game");
   const [questions, setQuestions] = useState("");
   const [qrData, setQrData] = useState(""); // State for QR code data
+  
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = {

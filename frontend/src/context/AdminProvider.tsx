@@ -2,7 +2,25 @@
 import { useEffect, useState } from "react";
 import { listenToCollection } from "../firebaseConfig";
 import { FirestoreAdminContext } from "./FirestoreContext";
-
+export interface ITeam {
+  id: string;
+  teamName: string;
+  hash: string;
+  players:string[];
+}
+export interface IQuestion{
+  id: string;
+  text: string;
+  difficulty: string;
+  status: string;
+}
+export interface IProgress {
+  id: string;
+  numberOfSolvedQuestions: number;
+  questionSet: IQuestion[];
+  numberOfQuestions:number;
+  lastSeenAt?: any;
+}
 const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -27,9 +45,10 @@ const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     );
 
+
     const unsubscribeTeamProgress = listenToCollection(
       "gameProgress",
-      ["numberOfQuestions", "questionSet", "numberOfSolvedQuestions"],
+      ["numberOfQuestions", "questionSet", "numberOfSolvedQuestions", "lastSeenAt"],
       (data) => {
         setCollectionData((prev) => ({ ...prev, progress: data }));
       }
