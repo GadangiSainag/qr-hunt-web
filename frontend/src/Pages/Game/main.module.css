@@ -1,0 +1,23 @@
+.qr-scanner-container {
+    position: relative;
+    /* width: 85vw; */
+    /* height: 520px; */
+    aspect-ratio: 1;
+    display: flex;
+    border-radius: 1.2em;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: black;
+  }
+  /* Prevent video from jumping by fixing its size */
+  .qr-scanner-container video {
+    /* width: 100vw;
+    height: 100vh; */
+    object-fit: cover;
+  }
+  
+  
+.warning	{
+    margin-top: 45px;
+}

@@ -4,6 +4,7 @@ import { usePlayerData } from "../../context/hooks";
 import axios from "axios";
 import { Label } from "@/Components/ui/label";
 import { Card, CardHeader } from "@/Components/ui/card";
+import classes from "./main.module.css"
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,8 @@ import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 
 function MainPage() {
   // const { id } = useAuth();
+
+ 
   const [focusId, setFocus] = useState("");
   const [startTime, setStartTime] = useState<number>(Date.now());
   const { documentData } = usePlayerData();
@@ -106,6 +109,7 @@ function MainPage() {
       setOpenDialog(true);
     }
   }
+ 
 
   function onSuccessScan(result: IDetectedBarcode[]) {
     console.log("scanned");
@@ -151,18 +155,32 @@ function MainPage() {
             <DialogTitle>Team Name</DialogTitle>
             <DialogDescription>Scan to login.</DialogDescription>
           </DialogHeader>
-          <Scanner
-            allowMultiple={true}
-            onScan={onSuccessScan}
-            scanDelay={2000}
-            styles={{
-              video: { width: "100%", height: "100%", objectFit: "cover" },
-            }} // Full-screen video
-            constraints={{
-              aspectRatio: 1, // You can manipulate this aspect ratio
-              facingMode: "environment",
-            }}
-          />
+          <div className={classes["qr-scanner-container"]}>
+             
+              <>
+                
+                  <Scanner
+                    onScan={onSuccessScan}
+                    scanDelay={2000}
+components={{onOff:true}}
+                    styles={{
+                      video: {
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      },
+                    }} // Full-screen video
+                    constraints={{
+                      aspectRatio: 1, // You can manipulate this aspect ratio
+                      facingMode: "environment",
+                      
+                    }}
+                  />
+                
+                
+              </>
+            
+          </div>
         </DialogContent>
       </Dialog>
       <Timer initialTimestamp={startTime} />

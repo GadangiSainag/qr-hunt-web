@@ -7,7 +7,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "./ui/card"; 
 import { Separator } from "./ui/separator";
 import {
   AlertDialog,
@@ -86,7 +86,7 @@ export default function ListAllQuestions() {
             <CardFooter className="pb-3 pt-1 flex  justify-evenly">
               <div className="flex h-5 space-x-4 text-sm">
                 <div
-                  className="flex align-middle"
+                  className="flex align-middle hover:cursor-pointer"
                   onClick={() => {
                     setDeleteAlert(true);
                     setDeleteId(question.id);
@@ -96,7 +96,7 @@ export default function ListAllQuestions() {
                 </div>
                 <Separator orientation="vertical" />
                 <div
-                  className="flex align-middle"
+                  className="flex align-middle hover:cursor-pointer"
                   onClick={() => {
                     handleQr(question.id);
                   }}
@@ -108,6 +108,7 @@ export default function ListAllQuestions() {
           </Card>
         </div>
       ))}
+      
       <AlertDialog open={deleteAlert} onOpenChange={setDeleteAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
