@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Timer from "../../Components/Timer/Timer";
-import { usePlayerData } from "../../context/hooks";
+import { useAuth, usePlayerData } from "../../context/hooks";
 import axios from "axios";
 import { Label } from "@/Components/ui/label";
 import { Card, CardHeader } from "@/Components/ui/card";
-import classes from "./main.module.css"
+import classes from "./main.module.css";
 import {
   Dialog,
   DialogContent,
@@ -15,11 +15,11 @@ import {
 import { BiScan } from "react-icons/bi";
 import { SiTicktick } from "react-icons/si";
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
+import { useNavigate } from "react-router-dom";
 
 function MainPage() {
-  // const { id } = useAuth();
-
- 
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const [focusId, setFocus] = useState("");
   const [startTime, setStartTime] = useState<number>(Date.now());
   const { documentData } = usePlayerData();
@@ -98,6 +98,16 @@ function MainPage() {
     };
     updateStartTime();
   }, []); // Empty dependency array ensures it runs only once on mount
+  useEffect(() => {
+    // log them out and divert to other page if team has completed their game 
+    console.log("sjdhbf")
+    if(documentData.team?.gameStatus === "COMPLETED" || documentData.team?.gameStatus === "STOPPED"){
+      // add some loggout animation or transition
+      logout();
+      navigate(`/leaderboard/game69}`);
+    }
+
+  }, [documentData.team?.gameStatus, logout, navigate]);
 
   function handleQr(id: string) {
     const particularQuestion = documentData.progress?.questionSet.find(
@@ -109,7 +119,6 @@ function MainPage() {
       setOpenDialog(true);
     }
   }
- 
 
   function onSuccessScan(result: IDetectedBarcode[]) {
     console.log("scanned");
@@ -146,6 +155,7 @@ function MainPage() {
         console.error(error);
       });
   }
+  
 
   return (
     <div>
@@ -156,30 +166,24 @@ function MainPage() {
             <DialogDescription>Scan to login.</DialogDescription>
           </DialogHeader>
           <div className={classes["qr-scanner-container"]}>
-             
-              <>
-                
-                  <Scanner
-                    onScan={onSuccessScan}
-                    scanDelay={2000}
-components={{onOff:true}}
-                    styles={{
-                      video: {
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      },
-                    }} // Full-screen video
-                    constraints={{
-                      aspectRatio: 1, // You can manipulate this aspect ratio
-                      facingMode: "environment",
-                      
-                    }}
-                  />
-                
-                
-              </>
-            
+            <>
+              <Scanner
+                onScan={onSuccessScan}
+                scanDelay={2000}
+                components={{ onOff: true }}
+                styles={{
+                  video: {
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  },
+                }} // Full-screen video
+                constraints={{
+                  aspectRatio: 1, // You can manipulate this aspect ratio
+                  facingMode: "environment",
+                }}
+              />
+            </>
           </div>
         </DialogContent>
       </Dialog>

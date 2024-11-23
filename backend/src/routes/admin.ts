@@ -4,6 +4,7 @@ import {
   addQuestions,
   registerTeam,
   deleteQuestion,
+  finishTeam,
 } from "../controllers/adminControllers";
 import { authenticateToken } from "../middlewares/authMiddleware";
 import { dummy } from "../controllers/testControllers";
@@ -24,5 +25,6 @@ router.post("/dummy", dummy);
 router.post("/questions/add", addQuestions);
 router.post("/questions/delete", deleteQuestion);
 router.post("/team", registerTeam);
+router.post("/team-end", finishTeam);
 
 export default router;

@@ -17,7 +17,6 @@ import {
 import Qr from "./Qr";
 import { ITeam } from "@/context/AdminProvider";
 import { useNavigate } from "react-router-dom";
-import { Label } from "./ui/label";
 
 
 
@@ -59,7 +58,7 @@ export default function ListAllTeams() {
         <div key={index} className="mt-4">
           <Card className="flex justify-between items-center w-80">
             <div className=" flex flex-col items-start flex-grow">
-            <CardHeader className="pb-3  flex-grow">
+            <CardHeader className="pb-3 flex-grow">
               <CardTitle className="hover:cursor-pointer" onClick={() => navigateToStatusPage(team.id)}>{team.teamName} </CardTitle>
             </CardHeader>
             <CardContent className="pb-3 flex flex-row">
@@ -67,10 +66,12 @@ export default function ListAllTeams() {
                 {team.players.length} Players
               </p>
               <p>Active</p>
+              <p>Offline</p>
+
             </CardContent>
             </div>
             <div
-              className="z-50 mr-4"
+              className="z-50 mr-4 hover:cursor-pointer"
               onClick={() => {
                 handleQr(team.id);
               }}

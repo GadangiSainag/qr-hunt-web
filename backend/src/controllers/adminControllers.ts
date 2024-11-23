@@ -124,6 +124,7 @@ export const addQuestions = async (req: Request, res: Response) => {
     res.status(400);
   }
 };
+
 export const deleteQuestion = async (req: Request, res: Response) => {
   try {
     const { questionId } = req.body;
@@ -222,5 +223,35 @@ export const registerTeam = async (
     // Handle the error appropriately
     console.error("Error storing question:", error);
     res.status(400).json({ message: "error creating team" });
+  }
+};
+
+export const finishTeam = async (req: Request, res: Response) => {
+  try {
+    // for validating questions only at present.
+    const {
+      teamId,
+      mode,
+    }: { teamId: string; hash: string; mode: "STOP" | "FINISH" } = req.body;
+
+    const teamRef = db.collection("allTeams").doc(`${teamId}`);
+    const teamDoc = await teamRef.get();
+
+    if (teamDoc.exists) {
+      if (mode === "FINISH") {
+        // Team has completed all questions, so add them to universal leaderboard
+        await teamRef.update({
+          gameStatus: "COMPLETED",
+        });
+      } else {
+        // Team forced to get Stopped, without solving all questions.
+        await teamRef.update({
+          gameStatus: "STOPPED",
+        });
+      }
+      res.json({ message: "GAME OVER" }).status(200);
+    }
+  } catch (error) {
+    res.status(400).json({ message: "Error", error });
   }
 };
