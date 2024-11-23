@@ -2,13 +2,13 @@ import { PDFDocument, rgb } from "pdf-lib";
 import QRCode from "qrcode";
 import { saveAs } from "file-saver";
 
-const generatePDFWithQRCode = async (text: string, place?: string, filename?:string) => {
+const generatePDFWithQRCode = async (hash: string,LocationText?:string, place?: string, filename?:string) => {
     // Integrate to have Answer on top of the qr and 
     // Place the qr in correct position.
     // Custom filename when pdf downloads
   try {
     // 1. Generate the QR code as a data URL
-    const qrCodeDataUrl = await QRCode.toDataURL(text);
+    const qrCodeDataUrl = await QRCode.toDataURL(hash);
 
     // 2. Load the existing image as bytes (replace with your image's URL or path)
     const imageUrl = "/qr-code.jpg";
@@ -46,7 +46,7 @@ const generatePDFWithQRCode = async (text: string, place?: string, filename?:str
     // 8. Draw the text below the QR code with padding
     const padding = 20;
     const textY = qrCodeY - padding; // Position the text slightly below the QR code
-    page.drawText(text, {
+    page.drawText(hash, {
       x: qrCodeX,
       y: textY,
       size: 12,

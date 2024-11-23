@@ -1,6 +1,7 @@
 import { useFirestoreData } from "../context/hooks";
 import { IoQrCodeOutline } from "react-icons/io5";
 import { IoTrashOutline } from "react-icons/io5";
+import { MdDownload } from "react-icons/md";
 import {
   Card,
   CardContent,
@@ -19,9 +20,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/Components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/Components/ui/dialog";
 import { useState } from "react";
 import axios from "axios";
 import generatePDFWithQRCode from "@/lib/create-pdf";
+import Qr from "./Qr";
 
 export interface IQuestion {
   id: string;
@@ -33,9 +42,14 @@ export interface IQuestion {
 }
 
 export default function ListAllQuestions() {
+
   const { collectionData } = useFirestoreData();
+
   const [deleteAlert, setDeleteAlert] = useState(false);
   const [deleteId, setDeleteId] = useState("");
+
+  const [qrDialogOpen, setQrDialog] = useState(false);
+  const [qrData, setQrData] = useState(""); // State for QR code data
 
   function handleDelete() {
     console.log("delete");
@@ -60,13 +74,21 @@ export default function ListAllQuestions() {
     setDeleteAlert(false);
   }
 
-  function handleQr(id: string) {
+  function handleQrDownload(id: string) {
     const question = collectionData.questions?.find(
       (question) => question.id === id
     );
     generatePDFWithQRCode(question.hash);
     console.log("pdf generated");
   }
+function handleQrView(id:string){
+  const question = collectionData.questions?.find(
+    (question) => question.id === id
+  );
+
+  setQrData(question.hash)
+  setQrDialog(true)
+}
 
   return (
     <div>
@@ -98,17 +120,35 @@ export default function ListAllQuestions() {
                 <div
                   className="flex align-middle hover:cursor-pointer"
                   onClick={() => {
-                    handleQr(question.id);
+                    handleQrView(question.id);
                   }}
                 >
                   <IoQrCodeOutline size="1.5em" />
+                </div>
+                  <Separator orientation="vertical" />
+                <div
+                  className="flex align-middle hover:cursor-pointer"
+                  onClick={() => {
+                    handleQrDownload(question.id);
+                  }}
+                >
+                  <MdDownload size="1.5em" />
                 </div>
               </div>
             </CardFooter>
           </Card>
         </div>
       ))}
-      
+      <Dialog open={qrDialogOpen} onOpenChange={setQrDialog}>
+        <DialogContent className="max-w-[380px]">
+          <DialogHeader>
+            <DialogTitle>Question Name</DialogTitle>
+            <DialogDescription>Scan to Answer</DialogDescription>
+          </DialogHeader>
+          <div>{qrData && <Qr qrData={qrData} qrSize={280} />}</div>
+        </DialogContent>
+      </Dialog>
+
       <AlertDialog open={deleteAlert} onOpenChange={setDeleteAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
