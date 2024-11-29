@@ -7,6 +7,8 @@ export interface ITeam {
   teamName: string;
   hash: string;
   players:string[];
+  gameStatus: "IN_GAME" | "COMPLETED" | "STOPPED";
+
 }
 export interface IQuestion{
   id: string;
@@ -31,7 +33,7 @@ const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const unsubscribeTeams = listenToCollection(
       "allTeams",
-      ["players", "teamName", "hash"],
+      ["players", "teamName", "hash", "gameStatus","duration", "huntId", "endTime", "registeredTime", "startTime"],
       (data) => {
         setCollectionData((prev) => ({ ...prev, teams: data }));
       }

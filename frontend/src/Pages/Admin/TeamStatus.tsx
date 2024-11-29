@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { Toggle } from "@/Components/ui/toggle";
 import { Button } from "@/Components/ui/button";
 import axios from "axios";
+import GameStatusBadge from "@/Components/GameStatusBadge";
 
 export default function TeamStatus() {
   const { teamId } = useParams();
@@ -47,7 +48,7 @@ export default function TeamStatus() {
         console.error(error);
       });
   }
-
+ 
   return (
     <div className="w-full">
       <h1>{teamData?.teamName}</h1>
@@ -55,6 +56,9 @@ export default function TeamStatus() {
         {teamData?.players.map((player) => (
           <label>{player} </label>
         ))}
+      </div>
+      <div>
+      < GameStatusBadge gameStatus={teamData?.gameStatus} />
       </div>
 
       <p className="bg-inherit">Questions</p>
@@ -95,7 +99,7 @@ export default function TeamStatus() {
         </div>
 
         <div className="">
-          <Button variant="ghost" onClick={()=> finishGame("FINISH")}>End</Button>
+          <Button variant="ghost" onClick={()=> finishGame("STOP")}>End</Button>
         </div>
       </div>
 

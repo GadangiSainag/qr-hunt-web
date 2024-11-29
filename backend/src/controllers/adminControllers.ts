@@ -6,6 +6,7 @@ import { IQuestion, ITeamDetails, TeamData } from "../interfaces/types";
 
 import { generateAccessToken, generateRefreshToken } from "./tokenControllers";
 import { stringToStringArray } from "../utils/converter";
+import { getDuration, getDurationString } from "../utils/time";
 
 export interface IUser {
   id: string;
@@ -236,17 +237,24 @@ export const finishTeam = async (req: Request, res: Response) => {
 
     const teamRef = db.collection("allTeams").doc(`${teamId}`);
     const teamDoc = await teamRef.get();
+    const teamData = teamDoc.data();
 
     if (teamDoc.exists) {
-      if (mode === "FINISH") {
+      if (
+        teamData?.gameStatus == "IN_GAME" ||
+        teamData?.gameStatus == "READY"
+      ) {
+        const start: number = teamData.startTime;
+        const end = Date.now();
+
+        const gameStatus = mode === "FINISH" ? "COMPLETED" : "STOPPED";
+
         // Team has completed all questions, so add them to universal leaderboard
         await teamRef.update({
-          gameStatus: "COMPLETED",
-        });
-      } else {
-        // Team forced to get Stopped, without solving all questions.
-        await teamRef.update({
-          gameStatus: "STOPPED",
+          gameStatus: gameStatus,
+          endTime: end,
+          duration: getDuration(start,end),
+          durationString: getDurationString(start,end),
         });
       }
       res.json({ message: "GAME OVER" }).status(200);
