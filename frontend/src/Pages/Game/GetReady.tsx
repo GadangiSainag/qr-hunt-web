@@ -17,7 +17,7 @@ function GetReady() {
   function handleButtonClick() {
     // after some transition like 3,2,1. and logo animation
 
-    navigate("/game/play");
+    navigate("/game/play"); 
   }
 
   console.log(documentData.team);

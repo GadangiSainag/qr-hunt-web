@@ -25,6 +25,8 @@ import PlayerDataProvider from "./context/PlayerProvider";
 import TeamsTab from "./Pages/Admin/TeamsTab";
 import { ThemeProvider } from "./Components/theme-provider";
 import TeamStatus from "./Pages/Admin/TeamStatus";
+import { Leaderboard } from "./Pages/Leaderboard/Leaderboard";
+import { GlobalLeaderboard } from "./Pages/Leaderboard/Global";
 
 function App() {
   // axios.interceptors.request.use(requestInterceptor);
@@ -52,6 +54,9 @@ function App() {
               <Route path="/team/login" element={<TeamLogin />} />
 
               <Route path="/404" element={<LostPage />} />
+
+              <Route path="/leaderboard/global" element={<GlobalLeaderboard />} />
+              <Route path="/leaderboard/:batchId" element={<Leaderboard />} />
 
               <Route
                 element={

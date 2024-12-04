@@ -65,8 +65,8 @@ export default function ListAllTeams() {
               <p className="text-sm text-gray-400">
                 {team.players.length} Players
               </p>
-              <p>Active</p>
-              <p>Offline</p>
+              {/* <p>Active</p>
+              <p>Offline</p> */}
 
             </CardContent>
             </div>

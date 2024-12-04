@@ -7,7 +7,7 @@ import {
   finishTeam,
 } from "../controllers/adminControllers";
 import { authenticateToken } from "../middlewares/authMiddleware";
-import { dummy } from "../controllers/testControllers";
+
 
 const router = Router();
 
@@ -21,7 +21,7 @@ router.post("/login", login);
 router.use(authenticateToken);
 // private routes
 
-router.post("/dummy", dummy);
+
 router.post("/questions/add", addQuestions);
 router.post("/questions/delete", deleteQuestion);
 router.post("/team", registerTeam);

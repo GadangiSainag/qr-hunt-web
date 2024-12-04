@@ -99,7 +99,7 @@ function handleQrView(id:string){
         <div key={index} className="mt-4">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle>{question.questionText}</CardTitle>
+              <CardTitle>{question.questionText} ({question.customId})</CardTitle>
             </CardHeader>
             <CardContent className="pb-2">
               <p>{question.hint}</p>

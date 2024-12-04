@@ -104,10 +104,10 @@ function MainPage() {
     if(documentData.team?.gameStatus === "COMPLETED" || documentData.team?.gameStatus === "STOPPED"){
       // add some loggout animation or transition
       logout();
-      navigate(`/leaderboard/game69}`);
+      navigate(`/leaderboard/${documentData.team?.huntId}`);
     }
 
-  }, [documentData.team?.gameStatus, logout, navigate]);
+  }, [documentData.team?.gameStatus, documentData.team?.huntId, logout, navigate]);
 
   function handleQr(id: string) {
     const particularQuestion = documentData.progress?.questionSet.find(
