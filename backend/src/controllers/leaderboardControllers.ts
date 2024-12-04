@@ -1,9 +1,11 @@
 import { ErrorRequestHandler, Request, Response } from "express";
 import { db } from "../config/db";
 import { getBatchLeaderboard, getGlobalLeaderboard } from "../utils/leaderboard";
+import { toPascalCase } from "../utils/converter";
 
 export const fetchBatchLeaderboard = async (req: Request, res: Response) => {
-  const { gameId } = req.params;
+  var { gameId } = req.params;
+  gameId = toPascalCase(gameId);
 console.log("got hit")
   if (!gameId) {
     res.status(400).json({ error: "Batch ID is required." });
