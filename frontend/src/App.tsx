@@ -37,63 +37,60 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <AuthContextProvider>
-        
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Navigate to="/home" />} />
-              <Route path="/home" element={<Home />} />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/home" element={<Home />} />
 
-              <Route path="/information" element={<Info />} />
+            <Route path="/information" element={<Info />} />
 
-              <Route path="/instructions" element={<Home />} />
+            <Route path="/instructions" element={<Home />} />
 
-              <Route path="/admin/login" element={<Login />} />
+            <Route path="/admin/login" element={<Login />} />
 
-              <Route path="/test/scanner" element={<QrScanner />} />
+            <Route path="/test/scanner" element={<QrScanner />} />
 
-              <Route path="/team/login" element={<TeamLogin />} />
+            <Route path="/team/login" element={<TeamLogin />} />
 
-              <Route path="/404" element={<LostPage />} />
+            <Route path="/404" element={<LostPage />} />
 
-              <Route path="/leaderboard/global" element={<GlobalLeaderboard />} />
-              <Route path="/leaderboard/:batchId" element={<Leaderboard />} />
+            <Route path="/leaderboard/global" element={<GlobalLeaderboard />} />
+            <Route path="/leaderboard/:batchId" element={<Leaderboard />} />
 
+            <Route
+              element={
+                <AdminDataProvider>
+                  <ProtectedRoute allowedRoles={["admin"]} />
+                </AdminDataProvider>
+              }
+            >
+              {/* Protected routes for only admin */}
+              <Route path="/admin/dashboard" element={<Dashboard />} />
+              <Route path="/admin/teams" element={<TeamsTab />} />
+              <Route path="/admin/questions" element={<QuestionsTab />} />
               <Route
-                element={
-                  <AdminDataProvider>
-                    <ProtectedRoute allowedRoles={["admin"]} />
-                  </AdminDataProvider>
-                }
-              >
-                {/* Protected routes for only admin */}
-                <Route path="/admin/dashboard" element={<Dashboard />} />
-                <Route path="/admin/teams" element={<TeamsTab />} />
-                <Route path="/admin/questions" element={<QuestionsTab />} />
-                <Route path="/admin/register-team" element={<RegisterTeam />} />
-                <Route
-                  path="/admin/team-satus/:teamId"
-                  element={<TeamStatus />}
-                />
-              </Route>
+                path="/admin/team-satus/:teamId"
+                element={<TeamStatus />}
+              />
+            </Route>
 
-              <Route
-                element={
-                  <PlayerDataProvider>
-                    <ProtectedRoute allowedRoles={["player"]} />
-                  </PlayerDataProvider>
-                }
-              >
-                {/* Protected routes for players only */}
-                <Route path="/game/ready" element={<GetReady />} />
-                <Route path="/game/play" element={<MainPage />} />
-              </Route>
+            <Route
+              element={
+                <PlayerDataProvider>
+                  <ProtectedRoute allowedRoles={["player"]} />
+                </PlayerDataProvider>
+              }
+            >
+              {/* Protected routes for players only */}
+              <Route path="/game/ready" element={<GetReady />} />
+              <Route path="/game/play" element={<MainPage />} />
+            </Route>
 
-              <Route path="/*" element={<LostPage />} />
+            <Route path="/*" element={<LostPage />} />
 
-              {/* <Route path="/en/:id" element={} /> */}
-            </Routes>
-          </BrowserRouter>
-        
+            {/* <Route path="/en/:id" element={} /> */}
+          </Routes>
+        </BrowserRouter>
       </AuthContextProvider>
     </ThemeProvider>
   );

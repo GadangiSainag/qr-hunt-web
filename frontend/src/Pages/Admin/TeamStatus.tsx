@@ -7,6 +7,8 @@ import { Toggle } from "@/Components/ui/toggle";
 import { Button } from "@/Components/ui/button";
 import axios from "axios";
 import GameStatusBadge from "@/Components/GameStatusBadge";
+import { Separator } from "@radix-ui/react-separator";
+import PlayerList from "@/Components/PlayerList";
 
 export default function TeamStatus() {
   const { teamId } = useParams();
@@ -53,9 +55,7 @@ export default function TeamStatus() {
     <div className="w-full">
       <h1>{teamData?.teamName}</h1>
       <div className="mt-8 mb-8 flex justify-evenly">
-        {teamData?.players.map((player) => (
-          <label>{player} </label>
-        ))}
+        <PlayerList players={teamData?.players}/>
       </div>
       <div>
       < GameStatusBadge gameStatus={teamData?.gameStatus} />
