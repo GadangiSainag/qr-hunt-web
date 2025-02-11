@@ -10,13 +10,11 @@ import GetReady from "./Pages/Game/GetReady";
 import Dashboard from "./Pages/Admin/Dashboard";
 import MainPage from "./Pages/Game/MainPage";
 import axios from "axios";
-// import requestInterceptor from './interceptors/request.interceptor';
 import {
   responseInterceptor,
   errorInterceptor,
 } from "./interceptors/response.interceptor";
 import ProtectedRoute from "./Components/ProtectedRoute";
-// import ListAllQuestions from "./Components/ListAllQuestions";
 import Info from "./Pages/Game/Info";
 import AuthContextProvider from "./context/AuthProvider";
 import QuestionsTab from "./Pages/Admin/QuestionsTab";
@@ -27,6 +25,7 @@ import { ThemeProvider } from "./Components/theme-provider";
 import TeamStatus from "./Pages/Admin/TeamStatus";
 import { Leaderboard } from "./Pages/Leaderboard/Leaderboard";
 import { GlobalLeaderboard } from "./Pages/Leaderboard/Global";
+import Layout from "./Pages/Admin/Layout";
 
 function App() {
   // axios.interceptors.request.use(requestInterceptor);
@@ -65,13 +64,16 @@ function App() {
               }
             >
               {/* Protected routes for only admin */}
-              <Route path="/admin/dashboard" element={<Dashboard />} />
-              <Route path="/admin/teams" element={<TeamsTab />} />
-              <Route path="/admin/questions" element={<QuestionsTab />} />
-              <Route
-                path="/admin/team-satus/:teamId"
-                element={<TeamStatus />}
-              />
+              <Route path="/admin" element={<Layout />}>
+                <Route path="/admin/dashboard" element={<Dashboard />} />
+                <Route path="/admin/teams" element={<TeamsTab />} />
+                <Route path="/admin/questions" element={<QuestionsTab />} />
+                <Route path="/admin/register-team" element={<RegisterTeam />} />
+                <Route
+                  path="/admin/team-satus/:teamId"
+                  element={<TeamStatus />}
+                />
+              </Route>
             </Route>
 
             <Route
