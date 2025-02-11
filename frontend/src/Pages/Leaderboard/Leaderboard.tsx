@@ -1,3 +1,4 @@
+import TruncateText from "@/Components/TruncateText";
 import {
   Table,
   TableBody,
@@ -70,7 +71,7 @@ if(notFoundStatus){
           {teamArre?.map((eachTeam, index:number) => (
             <TableRow key={index}>
               <TableCell className="font-medium">{index+1}</TableCell>
-              <TableCell className="text-left">{eachTeam.teamName}</TableCell>
+              <TableCell className="text-left"><TruncateText text={eachTeam.teamName} maxLength={26} /></TableCell>
               <TableCell>{eachTeam.gameStatus}</TableCell>
               <TableCell className="text-right">
                 {eachTeam.durationString}

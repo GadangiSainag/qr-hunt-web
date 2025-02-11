@@ -9,6 +9,7 @@ import axios from "axios";
 import GameStatusBadge from "@/Components/GameStatusBadge";
 import { Separator } from "@radix-ui/react-separator";
 import PlayerList from "@/Components/PlayerList";
+import TruncateText from "@/Components/TruncateText";
 
 export default function TeamStatus() {
   const { teamId } = useParams();
@@ -53,7 +54,7 @@ export default function TeamStatus() {
  
   return (
     <div className="w-full">
-      <h1>{teamData?.teamName}</h1>
+      <h1><TruncateText text={teamData?.teamName} maxLength={26} /></h1>
       <div className="mt-8 mb-8 flex justify-evenly">
         <PlayerList players={teamData?.players}/>
       </div>

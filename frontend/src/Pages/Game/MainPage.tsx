@@ -16,6 +16,7 @@ import { BiScan } from "react-icons/bi";
 import { SiTicktick } from "react-icons/si";
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import { useNavigate } from "react-router-dom";
+import TruncateText from "@/Components/TruncateText";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -188,7 +189,7 @@ function MainPage() {
         </DialogContent>
       </Dialog>
       <Timer initialTimestamp={startTime} />
-      <h1>{documentData.team?.teamName}</h1>
+      <h1><TruncateText text={documentData.team?.teamName} maxLength={26} /></h1>
       <Label>
         Remaining Challanges:{" "}
         {documentData.progress?.numberOfQuestions -

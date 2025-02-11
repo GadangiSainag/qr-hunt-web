@@ -17,6 +17,7 @@ import {
 import Qr from "./Qr";
 import { ITeam } from "@/context/AdminProvider";
 import { useNavigate } from "react-router-dom";
+import TruncateText from "./TruncateText";
 
 
 
@@ -59,7 +60,7 @@ export default function ListAllTeams() {
           <Card className="flex justify-between items-center w-80">
             <div className=" flex flex-col items-start flex-grow">
             <CardHeader className="pb-3 flex-grow">
-              <CardTitle className="hover:cursor-pointer" onClick={() => navigateToStatusPage(team.id)}>{team.teamName} </CardTitle>
+              <CardTitle className="hover:cursor-pointer" onClick={() => navigateToStatusPage(team.id)}><TruncateText text={team.teamName} maxLength={20} /> </CardTitle>
             </CardHeader>
             <CardContent className="pb-3 flex flex-row">
               <p className="text-sm text-gray-400">

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import {  usePlayerData } from "../../context/hooks";
 import { Label } from "@/Components/ui/label";
 import { Button } from "@/Components/ui/button";
+import TruncateText from "@/Components/TruncateText";
 export interface ITeamVisibleData {
   id: string;
   teamName: string;
@@ -28,7 +29,7 @@ function GetReady() {
   return (
     <div>
       Important instructions and rules. about game.
-      <h1>{documentData.team?.teamName}</h1>
+      <h1><TruncateText text={documentData.team?.teamName} maxLength={26} /> </h1>
       <br />
       <h2>Players</h2>
       {documentData.team && documentData.team?.players.map((player: string, index: number) => (
