@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const { fontFamily } = require("tailwindcss/defaultTheme");
 export default {
     darkMode: ["class"],
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -72,7 +73,12 @@ export default {
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out'
-  		}
+  		},
+		fontFamily: {
+			playfair: ["Playfair", ...fontFamily.sans],
+			roboto: ["Roboto", ...fontFamily.sans],
+			rubik: ["Rubik", ...fontFamily.sans],
+		  },
   	}
   },
   plugins: [require("tailwindcss-animate"),require('@tailwindcss/typography'),],

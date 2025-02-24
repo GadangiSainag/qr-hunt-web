@@ -10,7 +10,7 @@ interface MarkDownCompProps {
 const MarkDownComponent: React.FC<MarkDownCompProps> = ({ content }) => {
     return (
 
-            <div className="prose max-w-none dark:prose-invert ">
+            <div className="prose max-w-none dark:prose-invert">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeHighlight]}>
                     {content}
