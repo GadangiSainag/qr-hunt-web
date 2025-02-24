@@ -23,7 +23,13 @@ function GetReady() {
 
   console.log(documentData.team);
   if (loading) {
-    return <p>Loading data, please wait...</p>; // Render loading state until data is ready
+    return (
+      <div>
+        <p>Anytime this game gets buggy, do a quick refresh.</p> <br/>
+        <p>Now lets do a <strong>page refresh</strong> to get your details.</p>
+      </div>
+        
+  ); // Render loading state until data is ready
   }
 
   return (

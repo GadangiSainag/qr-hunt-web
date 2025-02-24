@@ -75,8 +75,6 @@ export default {
   			'accordion-up': 'accordion-up 0.2s ease-out'
   		},
 		fontFamily: {
-			playfair: ["Playfair", ...fontFamily.sans],
-			roboto: ["Roboto", ...fontFamily.sans],
 			rubik: ["Rubik", ...fontFamily.sans],
 		  },
   	}
