@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import {  usePlayerData } from "../../context/hooks";
-import { Label } from "@/Components/ui/label";
 import { Button } from "@/Components/ui/button";
 import TruncateText from "@/Components/TruncateText";
+import PlayerList from "@/Components/PlayerList";
+import MarkDownComponent from "@/Components/Markdown/MarkDownComponent";
+import instructionsText from "../../content/instructions.md";
 export interface ITeamVisibleData {
   id: string;
   teamName: string;
@@ -34,24 +36,27 @@ function GetReady() {
 
   return (
     <div>
-      Important instructions and rules. about game.
       <h1><TruncateText text={documentData.team?.teamName} maxLength={26} /> </h1>
+      <p>Hunt Id : <label className="font-thin">{documentData.team?.huntId}</label></p>
       <br />
-      <h2>Players</h2>
-      {documentData.team && documentData.team?.players.map((player: string, index: number) => (
-        <div key={index}>
-          <Label>{player}</Label>
-        </div>
-      ))}
-      {JSON.stringify(documentData.team)}
+      <PlayerList players={documentData.team?.players} />
       <br />
+     
+      <section className="mb-6">
+        <MarkDownComponent content={instructionsText} />
+      </section>
+      {/* {JSON.stringify(documentData.team)} */}
+      <br />
+      <br />
+      <p>Your timer starts after you click the button.</p>
+      <br />
+      <Button variant="secondary" onClick={handleButtonClick}>
+        Lets Hunt 🗡️🗺️
+      </Button>
       <br />
       <div>
         {documentData.team?.gameStatus === "IN_GAME" && <p className="text-lime-400">Continue to game</p>}
       </div>
-      <Button variant="secondary" onClick={handleButtonClick}>
-        Lets Hunt 🗡️🗺️
-      </Button>
     </div>
   );
 }

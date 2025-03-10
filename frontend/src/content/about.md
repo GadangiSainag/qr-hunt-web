@@ -1,6 +1,9 @@
-# QR hunt web game
+## QR hunt web game
+ 
+A QR Based Scavenger Hunt Game
 
-A web based fun treasure hunt game with a touch of technology.
+Ever fancied to step foot in an explorer’s shoes and get set in search for hidden treasures?
 
-* Qr codes are the treasures, 
-* be the first to find and capture all codes assigned to you.
+Spoorthi 2k25 presents you, Treasure Hunt! Tease your brain, solve clues and find locations inside JNTUH to win cash prizes.
+
+TREASURE HUNT allows you to experience the thrill in solving the clues guiding the treasure..

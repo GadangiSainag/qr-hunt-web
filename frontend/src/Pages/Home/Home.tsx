@@ -18,8 +18,6 @@ function Home() {
   }
   return (
     <div>
-      About the game, intresting background Game rules Link to Whatsapp Group
-      Link to Register Play Game
       <section className="mb-12">
         <MarkDownComponent content={aboutText} />
       </section>
