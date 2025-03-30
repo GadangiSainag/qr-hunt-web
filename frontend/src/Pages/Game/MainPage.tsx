@@ -17,8 +17,11 @@ import { SiTicktick } from "react-icons/si";
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import { useNavigate } from "react-router-dom";
 import TruncateText from "@/Components/TruncateText";
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function MainPage() {
+  
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [focusId, setFocus] = useState("");
@@ -143,23 +146,48 @@ function MainPage() {
     axios
       .post("/api/team/validate", data, config)
       .then((response) => {
-        console.log(response.data);
+        
         if (response.status === 200) {
           //  Show a tost for correct answer and close scanner
           setOpenDialog(false); //close scanner
-        } else {
-          console.error("Error registering team:", response.data);
-          // Handle errors gracefully (e.g., display error message to user)
+          // Show a success toast message
+          toast.success("Correct Answer", {
+            className: "w-[20rem]",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
         }
       })
       .catch((error) => {
-        console.error(error);
+         console.error("wrong answer", error.response.data);
+          // Handle errors gracefully (e.g., display error message to user)
+          setOpenDialog(false); //close scanner
+          toast.error("Incorrect Answer! Try again.", {
+            className: "w-[20rem]",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
       });
   }
   
 
   return (
     <div>
+       
       <Dialog open={dialogOpen} onOpenChange={setOpenDialog}>
         <DialogContent className="max-w-[380px]">
           <DialogHeader>
@@ -196,6 +224,7 @@ function MainPage() {
           documentData.progress?.numberOfSolvedQuestions}
       </Label>
       <br />
+      <ToastContainer />
       Main game page where a player spends most of the time <br /> Questions,
       timer, Score, TeamName
       <br />

@@ -40,6 +40,7 @@
     "react-markdown": "^10.0.0",
     "react-qrcode-logo": "^3.0.0",
     "react-router-dom": "^6.26.2",
+    "react-toastify": "^11.0.5",
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",
     "tailwind-merge": "^2.5.4",
