@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import classes from "./login.module.css";
 import { useAuth } from "../../context/hooks";
 import { Button } from "@/Components/ui/button";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 const TeamLogin = () => {
   const [showScanner, setShowScanner] = useState(false);
@@ -71,13 +72,26 @@ const TeamLogin = () => {
           if (response.status === 200) {
             setWarningMessage("Scan Successful.");
             setInvalidStatus(false); // Valid scan, so green color
-            setScanning(false);
+            toast.success("Correct Answer", {
+              className: "w-[20rem]",
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+              transition: Bounce,
+              });
+              setScanning(false);
 
             // Team will get a token from the server
             login(response.data.accessToken);
 
             // Redirect to ready page
             setRedirecting(true);
+            
             setTimeout(() => {
               navigate("/game/ready");
             }, 2000);
@@ -86,12 +100,24 @@ const TeamLogin = () => {
         })
         .catch((error) => {
           setInvalidStatus(true); // Invalid scan, so red color
-          setWarningMessage("Invalid Scan, try again.");
+          toast.error("Invalid Team Login!!!", {
+            className: "w-[22rem]",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
+          setWarningMessage("Invalid Team.");
           console.error(error);
         });
     } catch {
       setInvalidStatus(true); // If an error occurs, it's an invalid scan
-      setWarningMessage("Invalid Scan.");
+      setWarningMessage("Scan a proper Login QR code.");
     }
   }
 
@@ -122,6 +148,7 @@ const TeamLogin = () => {
 
   return (
     <div>
+      <ToastContainer /> 
       <div className={classes["qr-scanner-container"]}>
         {redirecting ? (
           <div className={classes["redirect-message"]}>

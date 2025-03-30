@@ -5,18 +5,19 @@ import TruncateText from "@/Components/TruncateText";
 import PlayerList from "@/Components/PlayerList";
 import MarkDownComponent from "@/Components/Markdown/MarkDownComponent";
 import instructionsText from "../../content/instructions.md";
+
 export interface ITeamVisibleData {
   id: string;
   teamName: string;
   players: string[];
   huntId: string;
   gameStatus: string;
-
-
 }
 function GetReady() {
   const navigate = useNavigate();
   const { documentData ,loading} = usePlayerData();
+
+
   function handleButtonClick() {
     // after some transition like 3,2,1. and logo animation
 
