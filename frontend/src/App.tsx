@@ -3,7 +3,6 @@ import "./App.css";
 import Home from "./Pages/Home/Home";
 import LostPage from "./Pages/NotFound/LostPage";
 import Login from "./Pages/Admin/Login";
-import QrScanner from "./Pages/Scanner/QrScanner";
 import RegisterTeam from "./Pages/Admin/RegisterTeam";
 import TeamLogin from "./Pages/Team/Login";
 import GetReady from "./Pages/Game/GetReady";
@@ -15,7 +14,6 @@ import {
   errorInterceptor,
 } from "./interceptors/response.interceptor";
 import ProtectedRoute from "./Components/ProtectedRoute";
-import Info from "./Pages/Game/Info";
 import AuthContextProvider from "./context/AuthProvider";
 import QuestionsTab from "./Pages/Admin/QuestionsTab";
 import AdminDataProvider from "./context/AdminProvider";
@@ -28,9 +26,6 @@ import { GlobalLeaderboard } from "./Pages/Leaderboard/Global";
 import Layout from "./Pages/Admin/Layout";
 
 function App() {
-  // axios.interceptors.request.use(requestInterceptor);
-  // Adding interceptors to axios
-
   axios.interceptors.response.use(responseInterceptor, errorInterceptor);
 
   return (
@@ -41,13 +36,9 @@ function App() {
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<Home />} />
 
-            <Route path="/information" element={<Info />} />
-
             <Route path="/instructions" element={<Home />} />
 
             <Route path="/admin/login" element={<Login />} />
-
-            <Route path="/test/scanner" element={<QrScanner />} />
 
             <Route path="/team/login" element={<TeamLogin />} />
 
@@ -89,8 +80,6 @@ function App() {
             </Route>
 
             <Route path="/*" element={<LostPage />} />
-
-            {/* <Route path="/en/:id" element={} /> */}
           </Routes>
         </BrowserRouter>
       </AuthContextProvider>
