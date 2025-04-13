@@ -5,13 +5,18 @@
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
+    "express-rate-limit": "^7.1.5",
     "firebase": "^10.14.0",
     "firebase-admin": "^12.6.0",
+    "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/express-rate-limit": "^6.0.0",
+    "@types/helmet": "^4.0.0",
     "@types/node": "^22.7.4",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
