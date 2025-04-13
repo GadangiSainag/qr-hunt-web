@@ -18,7 +18,7 @@ export default defineConfig({
   ],
   server: {
     // host: "0.0.0.0", //hosts vite on to local network, if using script `npm run dev` or else can use `npm run host`
-    port: 5173,
+    // port: 5173,
     open: true,
     proxy: {
       "/api": "https://qr-hunt-web.onrender.com",
