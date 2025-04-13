@@ -5,11 +5,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Toggle } from "@/Components/ui/toggle";
 import { Button } from "@/Components/ui/button";
-import axios from "axios";
 import GameStatusBadge from "@/Components/GameStatusBadge";
-import { Separator } from "@radix-ui/react-separator";
 import PlayerList from "@/Components/PlayerList";
 import TruncateText from "@/Components/TruncateText";
+import authApi from "@/lib/axiosAuthApi";
 
 export default function TeamStatus() {
   const { teamId } = useParams();
@@ -27,23 +26,16 @@ export default function TeamStatus() {
     setData(collectionData.teams?.find((team: ITeam) => team.id === teamId));
   }, [collectionData.progress, collectionData.teams, teamData, teamId]);
 
-  function finishGame( mode: "STOP" | "FINISH") {
+  function finishGame(mode: "STOP" | "FINISH") {
     const data = {
       teamId: teamId,
       mode: mode,
-      hash : 'kashdgkufH'
+      hash: "kashdgkufH",
     };
 
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    };
-    axios.defaults.withCredentials = true;
     // loading circle
-    axios
-      .post("/api/admin/team-end", data, config)
+    authApi
+      .post("/api/admin/team-end", data)
       .then((response) => {
         console.log(response);
       })
@@ -51,15 +43,17 @@ export default function TeamStatus() {
         console.error(error);
       });
   }
- 
+
   return (
     <div className="w-full">
-      <h1><TruncateText text={teamData?.teamName} maxLength={26} /></h1>
+      <h1>
+        <TruncateText text={teamData?.teamName} maxLength={26} />
+      </h1>
       <div className="mt-8 mb-8 flex justify-evenly">
-        <PlayerList players={teamData?.players}/>
+        <PlayerList players={teamData?.players} />
       </div>
       <div>
-      < GameStatusBadge gameStatus={teamData?.gameStatus} />
+        <GameStatusBadge gameStatus={teamData?.gameStatus} />
       </div>
 
       <p className="bg-inherit">Questions</p>
@@ -94,13 +88,19 @@ export default function TeamStatus() {
         </div>
 
         <div>
-          <Button variant="ghost" className="bg-lime-700" onClick={()=> finishGame("FINISH")}>
+          <Button
+            variant="ghost"
+            className="bg-lime-700"
+            onClick={() => finishGame("FINISH")}
+          >
             Validate
           </Button>
         </div>
 
         <div className="">
-          <Button variant="ghost" onClick={()=> finishGame("STOP")}>End</Button>
+          <Button variant="ghost" onClick={() => finishGame("STOP")}>
+            End
+          </Button>
         </div>
       </div>
 

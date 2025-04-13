@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/hooks";
@@ -12,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/Components/ui/card";
+import api from "@/lib/axiosApi";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,15 +28,8 @@ const Login = () => {
       password: password.trim(),
       role: "admin",
     };
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    axios.defaults.withCredentials = true;
-
-    axios
-      .post("/api/admin/login", data, config)
+    api
+      .post("/api/admin/login", data)
       .then((response) => {
         login(response.data.accessToken);
         navigate("/admin/dashboard");
@@ -85,14 +78,13 @@ const Login = () => {
             <br />
             <Button type="submit">Log me in!</Button>
           </form>
-            <br />
-            {isAuthenticated &&
-              role === "admin" &&
-              <p className="text-lime-300">You are already logged in 🔥</p>}
+          <br />
+          {isAuthenticated && role === "admin" && (
+            <p className="text-lime-300">You are already logged in 🔥</p>
+          )}
         </CardContent>
         <CardFooter>
-          <div>
-          </div>
+          <div></div>
         </CardFooter>
       </Card>
     </div>

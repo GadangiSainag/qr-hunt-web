@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Timer from "../../Components/Timer/Timer";
 import { useAuth, usePlayerData } from "../../context/hooks";
-import axios from "axios";
 import { Label } from "@/Components/ui/label";
 import { Card, CardHeader } from "@/Components/ui/card";
 import classes from "./main.module.css";
@@ -17,11 +16,11 @@ import { SiTicktick } from "react-icons/si";
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import { useNavigate } from "react-router-dom";
 import TruncateText from "@/Components/TruncateText";
-import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import authApi from "@/lib/axiosAuthApi";
 
 function MainPage() {
-  
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [focusId, setFocus] = useState("");
@@ -49,17 +48,9 @@ function MainPage() {
           const data = {
             location: { latitude, longitude },
           };
-          const config = {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // Assuming token is stored in localStorage
-            },
-          };
+
           // Make API call to backend with user's location
-          await axios.post(
-            "/api/team/update-location", // Your backend endpoint
-            data,
-            config
-          );
+          await authApi.post("/api/team/update-location", data);
         });
       } catch (error) {
         console.error("Error updating location:", error);
@@ -80,16 +71,9 @@ function MainPage() {
     const updateStartTime = async () => {
       const mountedTime = Date.now();
       try {
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        };
-        axios.defaults.withCredentials = true;
         const data = { startAt: mountedTime };
-        axios
-          .post("/api/game/start", data, config)
+        authApi
+          .post("/api/game/start", data)
           .then((response) => {
             console.log(response.status);
           })
@@ -103,15 +87,22 @@ function MainPage() {
     updateStartTime();
   }, []); // Empty dependency array ensures it runs only once on mount
   useEffect(() => {
-    // log them out and divert to other page if team has completed their game 
-    console.log("sjdhbf")
-    if(documentData.team?.gameStatus === "COMPLETED" || documentData.team?.gameStatus === "STOPPED"){
+    // log them out and divert to other page if team has completed their game
+    console.log("sjdhbf");
+    if (
+      documentData.team?.gameStatus === "COMPLETED" ||
+      documentData.team?.gameStatus === "STOPPED"
+    ) {
       // add some loggout animation or transition
       logout();
       navigate(`/leaderboard/${documentData.team?.huntId}`);
     }
-
-  }, [documentData.team?.gameStatus, documentData.team?.huntId, logout, navigate]);
+  }, [
+    documentData.team?.gameStatus,
+    documentData.team?.huntId,
+    logout,
+    navigate,
+  ]);
 
   function handleQr(id: string) {
     const particularQuestion = documentData.progress?.questionSet.find(
@@ -135,18 +126,11 @@ function MainPage() {
       questionId: focusId,
       hash: result[0].rawValue,
     };
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    };
-    axios.defaults.withCredentials = true;
+
     // loading circle
-    axios
-      .post("/api/team/validate", data, config)
+    authApi
+      .post("/api/team/validate", data)
       .then((response) => {
-        
         if (response.status === 200) {
           //  Show a tost for correct answer and close scanner
           setOpenDialog(false); //close scanner
@@ -162,32 +146,30 @@ function MainPage() {
             progress: undefined,
             theme: "colored",
             transition: Bounce,
-            });
+          });
         }
       })
       .catch((error) => {
-         console.error("wrong answer", error.response.data);
-          // Handle errors gracefully (e.g., display error message to user)
-          setOpenDialog(false); //close scanner
-          toast.error("Incorrect Answer! Try again.", {
-            className: "w-[20rem]",
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            transition: Bounce,
-            });
+        console.error("wrong answer", error.response.data);
+        // Handle errors gracefully (e.g., display error message to user)
+        setOpenDialog(false); //close scanner
+        toast.error("Incorrect Answer! Try again.", {
+          className: "w-[20rem]",
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
       });
   }
-  
 
   return (
     <div>
-       
       <Dialog open={dialogOpen} onOpenChange={setOpenDialog}>
         <DialogContent className="max-w-[380px]">
           <DialogHeader>
@@ -217,7 +199,9 @@ function MainPage() {
         </DialogContent>
       </Dialog>
       <Timer initialTimestamp={startTime} />
-      <h1><TruncateText text={documentData.team?.teamName} maxLength={26} /></h1>
+      <h1>
+        <TruncateText text={documentData.team?.teamName} maxLength={26} />
+      </h1>
       <Label>
         Remaining Challanges:{" "}
         {documentData.progress?.numberOfQuestions -

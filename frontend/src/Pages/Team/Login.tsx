@@ -1,11 +1,11 @@
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import classes from "./login.module.css";
 import { useAuth } from "../../context/hooks";
 import { Button } from "@/Components/ui/button";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import api from "@/lib/axiosApi";
 
 const TeamLogin = () => {
   const [showScanner, setShowScanner] = useState(false);
@@ -59,15 +59,9 @@ const TeamLogin = () => {
         },
       };
 
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      axios.defaults.withCredentials = true;
-      axios
-        .post("/api/team/login", data, config)
+      
+      api
+        .post("/api/team/login", data)
         .then((response) => {
           if (response.status === 200) {
             setWarningMessage("Scan Successful.");

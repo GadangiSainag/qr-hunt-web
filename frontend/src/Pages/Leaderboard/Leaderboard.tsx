@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/Components/ui/table";
-import axios from "axios";
+import authApi from "@/lib/axiosAuthApi";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 interface Team {
@@ -30,16 +30,8 @@ export function Leaderboard() {
   
 
   useEffect(()=>{
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    };
-    axios.defaults.withCredentials = true;
-  
-    axios
-    .get(`/api/leaderboard/${batchId}` , config)
+    authApi
+    .get(`/api/leaderboard/${batchId}`)
     .then((response) => {
       console.log(response.data);
       setTeamArre(response.data.leaderboard)

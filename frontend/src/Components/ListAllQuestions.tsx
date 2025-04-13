@@ -28,9 +28,9 @@ import {
   DialogTitle,
 } from "@/Components/ui/dialog";
 import { useState } from "react";
-import axios from "axios";
 import generatePDFWithQRCode from "@/lib/create-pdf";
 import Qr from "./Qr";
+import authApi from "@/lib/axiosAuthApi";
 
 export interface IQuestion {
   id: string;
@@ -55,16 +55,9 @@ export default function ListAllQuestions() {
     console.log("delete");
     console.log(deleteId);
     const data = { questionId: deleteId };
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    };
-
-    axios.defaults.withCredentials = true;
-    axios
-      .post("/api/admin/questions/delete", data, config)
+    
+    authApi
+      .post("/api/admin/questions/delete", data)
       .then((response) => {
         console.log(response.data);
       })

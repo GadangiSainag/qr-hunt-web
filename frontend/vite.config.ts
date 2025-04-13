@@ -1,20 +1,22 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import tsconfigPaths from "vite-tsconfig-paths";
 // https://vitejs.dev/config/
 export default defineConfig({
-  base:"/",
+  base: "/",
   plugins: [
     react(),
+    tsconfigPaths(),
     {
-      name: 'markdown-transform',
+      name: "markdown-transform",
       transform(code, id) {
-        if (id.endsWith('.md')) {
+        if (id.endsWith(".md")) {
           // Wrap in JS string and export
           return `export default ${JSON.stringify(code)};`;
         }
-      }
-    }
+      },
+    },
   ],
   server: {
     // host: "0.0.0.0", //hosts vite on to local network, if using script `npm run dev` or else can use `npm run host`
@@ -29,5 +31,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  
 });

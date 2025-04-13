@@ -1,6 +1,5 @@
 // Import necessary Firebase modules
 import { useState } from "react";
-import axios from "axios";
 import {
   Select,
   SelectContent,
@@ -20,6 +19,8 @@ import {
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+
+import authApi from "@/lib/axiosAuthApi"; // the non-auth version
 
 export default function AddQuestions() {
   const [customId, setCustomid] = useState("");
@@ -45,16 +46,10 @@ export default function AddQuestions() {
         },
       ],
     };
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    };
-    axios.defaults.withCredentials = true;
+    
 
-    axios
-      .post("/api/admin/questions/add", data, config)
+    authApi
+      .post("/api/admin/questions/add", data)
       .then((response) => {
         //    reset form for new values
         setCustomid("");

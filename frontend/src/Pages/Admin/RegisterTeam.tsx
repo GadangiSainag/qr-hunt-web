@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState } from "react";
 import Qr from "../../Components/Qr";
 import {
@@ -21,6 +20,7 @@ import {
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
+import authApi from "@/lib/axiosAuthApi";
 
 // import style from './login.module.css'
 const RegisterTeam = () => {
@@ -32,7 +32,7 @@ const RegisterTeam = () => {
   const [huntId, setHuntId] = useState("Game");
   const [questions, setQuestions] = useState("");
   const [qrData, setQrData] = useState(""); // State for QR code data
-  
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = {
@@ -42,16 +42,9 @@ const RegisterTeam = () => {
       questions: questions.trim(),
     };
 
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    };
-    axios.defaults.withCredentials = true;
     setOpenDrawer(false);
-    axios
-      .post("/api/admin/team", data, config)
+    authApi
+      .post("/api/admin/team", data)
       // .post("/api/admin/dummy", data, config)
       .then((response) => {
         console.log(response.data);
@@ -126,7 +119,9 @@ const RegisterTeam = () => {
             </div>
             <br />
             <DrawerFooter>
-              <Button type="submit" variant="secondary">Add Pirates ☠️</Button>
+              <Button type="submit" variant="secondary">
+                Add Pirates ☠️
+              </Button>
             </DrawerFooter>
           </form>
         </DrawerContent>
