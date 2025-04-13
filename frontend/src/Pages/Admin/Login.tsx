@@ -31,6 +31,7 @@ const Login = () => {
     api
       .post("/api/admin/login", data)
       .then((response) => {
+        console.log(import.meta.env.VITE_API_URL + "/api/admin/login"); //debug only
         login(response.data.accessToken);
         navigate("/admin/dashboard");
       })
