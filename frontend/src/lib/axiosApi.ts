@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // Automatically prefixed
+  baseURL: import.meta.env.VITE_REACT_APP_API_URL, // Automatically prefixed
   withCredentials: true, // Optional: if you’re using cookies/auth
 });
 
