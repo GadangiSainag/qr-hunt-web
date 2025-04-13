@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/treasure-hunt/',
   plugins: [
     react(),
     {
@@ -20,7 +21,7 @@ export default defineConfig({
     port: 5173,
     open: true,
     proxy: {
-      "/api": "http://localhost:5000",
+      "/api": "https://qr-hunt-web.onrender.com",
     },
   },
   resolve: {
