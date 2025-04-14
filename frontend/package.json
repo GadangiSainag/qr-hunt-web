@@ -28,6 +28,7 @@
     "@yudiel/react-qr-scanner": "^2.0.8",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
+    "canvas": "^3.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "file-saver": "^2.0.5",

@@ -142,6 +142,7 @@ const TeamLogin = () => {
 
   return (
     <div>
+    <p className="mb-3">Ask Admin for Login QR code</p>
       <ToastContainer /> 
       <div className={classes["qr-scanner-container"]}>
         {redirecting ? (

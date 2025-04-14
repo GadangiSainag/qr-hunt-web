@@ -28,9 +28,10 @@ import {
   DialogTitle,
 } from "@/Components/ui/dialog";
 import { useState } from "react";
-import generatePDFWithQRCode from "@/lib/create-pdf";
+
 import Qr from "./Qr";
 import authApi from "@/lib/axiosAuthApi";
+import { downloadImage, generateQR } from "@/lib/generateImage";
 
 export interface IQuestion {
   id: string;
@@ -67,12 +68,19 @@ export default function ListAllQuestions() {
     setDeleteAlert(false);
   }
 
-  function handleQrDownload(id: string) {
+  async function handleQrDownload(id: string) {
     const question = collectionData.questions?.find(
       (question) => question.id === id
     );
-    generatePDFWithQRCode(question.hash);
-    console.log("pdf generated");
+    const result = await generateQR({
+      text: question.hash,
+      topText: question.hint,
+      bottomText: question.hash,
+      logoPath: '../../public/logo.png',
+    });
+    console.log("Hit2");
+    downloadImage(result.dataURL, result.fileName);
+    console.log("image downloaded");
   }
 function handleQrView(id:string){
   const question = collectionData.questions?.find(

@@ -136,3 +136,12 @@ export {
   AlertDialogAction,
   AlertDialogCancel,
 }
+function buttonVariants({ variant }: { variant?: "outline" | "default" } = {}): import("clsx").ClassValue {
+  return cn(
+    "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
+    variant === "outline"
+      ? "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+      : "bg-primary text-primary-foreground hover:bg-primary/90"
+  );
+}
+

@@ -1,7 +1,7 @@
 import { Request, response, Response } from "express";
 
 import { db } from "../config/db";
-import createSHA256Hash from "../utils/createHash";
+import createHash from "../utils/createHash";
 import { IQuestion, ITeamDetails, TeamData } from "../interfaces/types";
 
 import { generateAccessToken, generateRefreshToken } from "./tokenControllers";
@@ -106,7 +106,7 @@ export const addQuestions = async (req: Request, res: Response) => {
             questionText: element.questionText,
             hint: element.hint,
             difficulty: element.difficulty,
-            hash: createSHA256Hash(element.customId, process.env.HASH_SALT),
+            hash: createHash(element.customId, process.env.HASH_SALT,20),
           };
 
           // await questionsRef.doc(`${element.customId}`).set(questionData);
@@ -171,7 +171,7 @@ export const registerTeam = async (
         const teamData = {
           teamName: data.teamName,
           players: stringToStringArray(data.players, true),
-          hash: createSHA256Hash(teamName, process.env.HASH_SALT),
+          hash: createHash(teamName, process.env.HASH_SALT, 20),
           huntId: data.huntId,
           startTime: null,
           registeredTime: Date.now(),
@@ -253,8 +253,8 @@ export const finishTeam = async (req: Request, res: Response) => {
         await teamRef.update({
           gameStatus: gameStatus,
           endTime: end,
-          duration: getDuration(start,end),
-          durationString: getDurationString(start,end),
+          duration: getDuration(start, end),
+          durationString: getDurationString(start, end),
         });
       }
       res.json({ message: "GAME OVER" }).status(200);
