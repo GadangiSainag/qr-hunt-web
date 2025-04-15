@@ -27,6 +27,7 @@ function MainPage() {
   const [startTime, setStartTime] = useState<number>(Date.now());
   const { documentData } = usePlayerData();
   const [dialogOpen, setOpenDialog] = useState(false);
+  const [clueText, setClueText] = useState("Clue");
   const [location, setLocation] = useState<{
     latitude?: number;
     longitude?: number;
@@ -111,6 +112,7 @@ function MainPage() {
     if (particularQuestion.status === "PENDING") {
       console.log(particularQuestion.status);
       setFocus(id);
+      setClueText(particularQuestion.text);
       setOpenDialog(true);
     }
   }
@@ -173,8 +175,8 @@ function MainPage() {
       <Dialog open={dialogOpen} onOpenChange={setOpenDialog}>
         <DialogContent className="max-w-[380px]">
           <DialogHeader>
-            <DialogTitle>Team Name</DialogTitle>
-            <DialogDescription>Scan to login.</DialogDescription>
+            <DialogTitle>{clueText}</DialogTitle>
+            <DialogDescription>Scan to Validate.</DialogDescription>
           </DialogHeader>
           <div className={classes["qr-scanner-container"]}>
             <>
