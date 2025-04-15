@@ -28,14 +28,14 @@ const Timer: React.FC<ITimerProps> = ({ initialTimestamp }) => {
   const minutes = Math.floor((elapsedTime % 3600000) / 60000);
   const seconds = Math.floor((elapsedTime % 60000) / 1000);
 
-  const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+  const formattedTime = `${hours.toString().padStart(2, "0")} :${minutes
     .toString()
-    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    .padStart(2, "0")} :${seconds.toString().padStart(2, "0")}`;
 
 
 
   return (
-    <div>
+    <div className="text-lg">
       {formattedTime}
     </div>
   );

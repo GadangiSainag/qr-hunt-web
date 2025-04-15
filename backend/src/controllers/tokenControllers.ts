@@ -10,7 +10,7 @@ interface IRefreshTokenPayload {
 
 export const generateAccessToken = (user: IUser): string => {
   return jwt.sign({ id: user.id, role: user.role } as JWTPayload, process.env.ACCESS_TOKEN_SECRET as string, {
-    expiresIn: "30m",
+    expiresIn: "59m",
   });
 };
 
