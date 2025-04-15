@@ -204,15 +204,13 @@ function MainPage() {
       <h1>
         <TruncateText text={documentData.team?.teamName} maxLength={26} />
       </h1>
-      <Label>
+      <Label className="text-right">
         Remaining Challanges:{" "}
         {documentData.progress?.numberOfQuestions -
           documentData.progress?.numberOfSolvedQuestions}
       </Label>
       <br />
       <ToastContainer />
-      Main game page where a player spends most of the time <br /> Questions,
-      timer, Score, TeamName
       <br />
       <br />
       {documentData.progress?.questionSet.map((eachQuestion, index: number) => (

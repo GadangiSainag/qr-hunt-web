@@ -71,12 +71,6 @@ if(notFoundStatus){
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">hello</TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
     </div>
   );
